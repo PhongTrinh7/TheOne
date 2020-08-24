@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3111251293411443967
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3831520579966554125}
+  - component: {fileID: 1078782151265489914}
+  m_Layer: 0
+  m_Name: Board
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3831520579966554125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3111251293411443967}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 127.91695, y: 100.40334, z: -22.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1078782151265489914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3111251293411443967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b7413919210a948b9b0610a7bec508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rows: 8
+  columns: 12
+  outerWallTiles:
+  - {fileID: 3655163117366364902, guid: a9870a5aa4511784da80233dd57d8722, type: 3}
+  - {fileID: 5841278203309984515, guid: ad08291851884944281e51ca199af09e, type: 3}
+  floorTiles:
+  - {fileID: 3597451680168760057, guid: a38274317a72b2749b1edb4b790058b6, type: 3}
+  - {fileID: 3376735738354201327, guid: b1e649846dc2b8a43960fc14766dab5a, type: 3}
+  - {fileID: 7870294146877137257, guid: 9aa7603ca741e324a83f88ddf4fffd46, type: 3}
+  - {fileID: 186606044949628337, guid: d3cb2b09a4bb024418f1c8f761d537e0, type: 3}
+  wallTiles:
+  - {fileID: 2117281917934142948, guid: 36df8cd1844bace4eb7b93e2d9c8a866, type: 3}
+  - {fileID: 624173366221980061, guid: 04e05044eee79bc4eadbc7432fa7bc2a, type: 3}
+  unwalkables: []
+  players:
+  - {fileID: 3228776781183571517, guid: 1949025b854df8a4ebc06fb49e8f8109, type: 3}
+  - {fileID: 3228776781183571517, guid: 1949025b854df8a4ebc06fb49e8f8109, type: 3}
+  - {fileID: 3228776781183571517, guid: 1949025b854df8a4ebc06fb49e8f8109, type: 3}
+  enemies:
+  - {fileID: 6759375771503353821, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
+  - {fileID: 6759375771503353821, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
+  - {fileID: 6759375771503353821, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
+  units: []
