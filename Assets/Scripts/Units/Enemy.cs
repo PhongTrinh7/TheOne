@@ -54,7 +54,7 @@ public class Enemy : MovingObject
             {
                 facingDirection = path[i].coord - transform.position;
                 ChangeFacingDirection(facingDirection);
-                StartCoroutine(Move((int)facingDirection.x, (int)facingDirection.y));
+                yield return StartCoroutine(Move((int)facingDirection.x, (int)facingDirection.y));
 
                 if (health <= 0 || stun)
                 {
@@ -62,7 +62,7 @@ public class Enemy : MovingObject
                     yield break;
                 }
 
-                yield return new WaitForSeconds(.7f);
+
 
                 if (Vector3.Distance(transform.position, target.position) <= 1)
                 {

@@ -43,8 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b7413919210a948b9b0610a7bec508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 8
-  columns: 12
+  rows: 6
+  columns: 6
   outerWallTiles:
   - {fileID: 3655163117366364902, guid: a9870a5aa4511784da80233dd57d8722, type: 3}
   - {fileID: 5841278203309984515, guid: ad08291851884944281e51ca199af09e, type: 3}
@@ -59,8 +59,7 @@ MonoBehaviour:
   unwalkables: []
   players:
   - {fileID: 3228776781183571517, guid: 1949025b854df8a4ebc06fb49e8f8109, type: 3}
-  - {fileID: 3228776781183571517, guid: 1949025b854df8a4ebc06fb49e8f8109, type: 3}
-  - {fileID: 3228776781183571517, guid: 1949025b854df8a4ebc06fb49e8f8109, type: 3}
+  - {fileID: 1899455175842422477, guid: 2baadd4cd5319f64e8355eb112f2fa85, type: 3}
   enemies:
   - {fileID: 6759375771503353821, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
   - {fileID: 6759375771503353821, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}

@@ -13,6 +13,7 @@ public class BattleHandler : Manager<BattleHandler>
 
     //Handles turns.
     public int currentTurn = 0;
+    public float turnDelay = .5f;
     public MovingObject activeUnit;
     public Queue<MovingObject> currentUnits;
 
@@ -155,6 +156,7 @@ public class BattleHandler : Manager<BattleHandler>
 
         //Next up in line goes.
         activeUnit = currentUnits.Peek();
+
         if (activeUnit.dead)
         {
             RemoveUnit(currentUnits.Dequeue());
@@ -167,7 +169,7 @@ public class BattleHandler : Manager<BattleHandler>
 
 
         //Let effects run their course before setting enemy loose.
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(turnDelay);
 
         if (activeUnit.IsNpc)
         {
@@ -175,7 +177,7 @@ public class BattleHandler : Manager<BattleHandler>
             yield return StartCoroutine(EnemyTurn());
 
             Debug.Log("enemy end");
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(turnDelay);
             StartCoroutine(AdvanceTurn());
         }
         controlLocked = false;
@@ -208,6 +210,7 @@ public class BattleHandler : Manager<BattleHandler>
         activeUnit.CastAbility(3);
     }
 
+    //Send them to the shadow realms.
     public void RemoveUnit(MovingObject unit)
     {
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);

@@ -95,24 +95,4 @@ public class UIManager : Manager<UIManager>
             turnOrderPortraits.Add(Instantiate(unit.portrait, turnOrderPanel.transform));
         }
     }
-
-    public void AdvanceTurnOrderPortraits()
-    {
-        /*Image portrait = turnOrderPortraits[0];
-        turnOrderPortraits.Remove(portrait);
-
-        turnOrderPortraits.Add(Instantiate(portrait, turnOrderPanel.transform));
-        Destroy(portrait.gameObject);
-    }
-
-    public void RemoveTurnOrderPortrait(MovingObject unit)
-    {
-        Image portrait = turnOrderPortraits.Find(x => x.sprite == unit.portrait.sprite);
-        turnOrderPortraits.Remove(portrait);
-        Destroy(portrait.gameObject);
-
-        /*Image portrait = turnOrderPortraits[currentTurn];
-        turnOrderPortraits.Remove(portrait);
-        Destroy(portrait.gameObject);*/
-    }
 }

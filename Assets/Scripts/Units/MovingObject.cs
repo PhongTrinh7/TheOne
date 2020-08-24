@@ -59,8 +59,8 @@ public abstract class MovingObject : MonoBehaviour
     public bool shock;
 
     //Movement
-    protected float moveTime = 0.2f;
-    private float inverseMoveTime;
+    protected float moveSpeed = 10f;
+    protected float inverseMoveTime;
     public LayerMask blockingLayer;
     public Vector2 facingDirection;
     public int moveCost = 1;
@@ -79,7 +79,7 @@ public abstract class MovingObject : MonoBehaviour
         //Collision detection.
         boxCollider = GetComponent<BoxCollider2D>(); // for collision
         rb2D = GetComponent<Rigidbody2D>(); // for collision
-        inverseMoveTime = 1f / moveTime; // for smooth movement
+        inverseMoveTime = 1f / moveSpeed; // for smooth movement
         anim = GetComponent<Animator>(); // get animator
 
         //Get reference to health bar.
@@ -150,7 +150,7 @@ public abstract class MovingObject : MonoBehaviour
 
                 //Movement animation.
                 anim.SetBool("Moving", true);
-                yield return StartCoroutine(SmoothMovement(end));
+                yield return StartCoroutine(SmoothMovement(end, 1f));
             }
         }
 
@@ -158,13 +158,13 @@ public abstract class MovingObject : MonoBehaviour
         ReturnToPriorState();
     }
 
-    protected IEnumerator SmoothMovement(Vector3 end)
+    protected IEnumerator SmoothMovement(Vector3 end, float speedMultiplier)
     {
         float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
         while (sqrRemainingDistance > float.Epsilon)
         {
-            Vector3 newPosition = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
+            Vector3 newPosition = Vector3.MoveTowards(rb2D.position, end, speedMultiplier * moveSpeed * Time.deltaTime);
             rb2D.MovePosition(newPosition);
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
             yield return null;
@@ -244,14 +244,14 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end));
+            yield return StartCoroutine(SmoothMovement(end, 2f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = direction;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
             TakeDamage(50);
         }
 
@@ -282,14 +282,14 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end));
+            yield return StartCoroutine(SmoothMovement(end, 2f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = facingDirection;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
             if (hit.transform.gameObject.CompareTag("Enemy"))
             {
                 hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
@@ -344,6 +344,10 @@ public abstract class MovingObject : MonoBehaviour
         {
             health = 0;
             dead = true;
+        }
+        else if (dead && health > 0)
+        {
+            dead = false;
         }
 
         healthBar.SetCurrentHealth(health);
