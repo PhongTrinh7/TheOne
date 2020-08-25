@@ -47,7 +47,7 @@ public class Displace : Ability
             Debug.Log("nothing was hit");
         }
 
-        cooldown = initialCooldown;
-        onCooldown = true;
+        PlaceOnCooldown();
+        UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

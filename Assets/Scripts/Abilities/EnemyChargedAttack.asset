@@ -22,5 +22,6 @@ MonoBehaviour:
   cost: 1
   initialCooldown: 2
   cooldown: 0
+  cooldownFill: 1
   onCooldown: 0
   dischargeAnimationName: Discharge

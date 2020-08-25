@@ -22,6 +22,7 @@ MonoBehaviour:
   cost: 3
   initialCooldown: 4
   cooldown: 0
+  cooldownFill: 1
   onCooldown: 0
   bleedRoot: {fileID: 5315779032009509307, guid: f508f41209d147b4e971bf0c27b68dbb,
     type: 3}

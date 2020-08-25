@@ -55,7 +55,7 @@ public class ChargedAttack : Ability
             Debug.Log("nothing was hit");
         }
 
-        cooldown = initialCooldown;
-        onCooldown = true;
+        PlaceOnCooldown();
+        UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

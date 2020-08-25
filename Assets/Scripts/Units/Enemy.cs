@@ -42,6 +42,12 @@ public class Enemy : MovingObject
 
         path = pathfinding.FindPath((int)transform.position.x, (int)transform.position.y, (int)target.position.x, (int)target.position.y);
 
+        if (path == null)
+        {
+            Debug.Log("No possible route to target!");
+            yield break;
+        }
+
         if (path.Count == 0)
         {
             ChangeFacingDirection(target.position - transform.position);

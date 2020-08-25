@@ -59,7 +59,7 @@ public abstract class MovingObject : MonoBehaviour
     public bool shock;
 
     //Movement
-    protected float moveSpeed = 10f;
+    protected float moveSpeed = 20f;
     protected float inverseMoveTime;
     public LayerMask blockingLayer;
     public Vector2 facingDirection;
@@ -244,14 +244,14 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end, 2f));
+            yield return StartCoroutine(SmoothMovement(end, 3f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = direction;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 3f));
             TakeDamage(50);
         }
 

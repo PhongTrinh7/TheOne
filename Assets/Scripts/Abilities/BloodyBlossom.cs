@@ -15,12 +15,12 @@ public class BloodyBlossom : Ability
 
     public override bool Cast(MovingObject caster)
     {
-        caster.TriggerAnimation(animationName, abilitySlot);
-
         if (onCooldown)
         {
             return false;
         }
+
+        caster.TriggerAnimation(animationName, abilitySlot);
 
         return true;
     }
@@ -100,7 +100,7 @@ public class BloodyBlossom : Ability
 
         caster.PlaceHazardWave(bleedRoot, waves, 0.2f);
 
-        cooldown = initialCooldown;
-        onCooldown = true;
+        PlaceOnCooldown();
+        UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

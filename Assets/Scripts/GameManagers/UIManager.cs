@@ -41,6 +41,14 @@ public class UIManager : Manager<UIManager>
         abilityPanel.gameObject.SetActive(!abilityPanel.gameObject.activeInHierarchy);
     }
 
+    public void UpdateActiveUnitAbilities(MovingObject activeUnit)
+    {
+        b1.GetComponent<Image>().fillAmount = activeUnit.abilities[0].cooldownFill;
+        b2.GetComponent<Image>().fillAmount = activeUnit.abilities[1].cooldownFill;
+        b3.GetComponent<Image>().fillAmount = activeUnit.abilities[2].cooldownFill;
+        b4.GetComponent<Image>().fillAmount = activeUnit.abilities[3].cooldownFill;
+    }
+
     public void SetSkillsUninteractable()
     {
         b1.interactable = false;

@@ -14,6 +14,7 @@ public abstract class Ability : ScriptableObject
     public int cost;
     public int initialCooldown;
     public int cooldown;
+    public float cooldownFill;
     public bool onCooldown = false;
 
     public virtual void Description()
@@ -30,14 +31,23 @@ public abstract class Ability : ScriptableObject
 
     public abstract void Effect(MovingObject caster);
 
+    public virtual void PlaceOnCooldown()
+    {
+        cooldown = initialCooldown;
+        onCooldown = true;
+        cooldownFill = 0;
+    }
+
     public virtual void Cooldown()
     {
         if (onCooldown)
         {
             cooldown--;
+            cooldownFill += (1f / initialCooldown);
             if (cooldown == 0)
             {
                 onCooldown = false;
+                cooldownFill = 1;
             }
         }
     }

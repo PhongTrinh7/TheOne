@@ -13,7 +13,7 @@ public class BattleHandler : Manager<BattleHandler>
 
     //Handles turns.
     public int currentTurn = 0;
-    public float turnDelay = .5f;
+    public float turnDelay = .7f;
     public MovingObject activeUnit;
     public Queue<MovingObject> currentUnits;
 
@@ -56,9 +56,6 @@ public class BattleHandler : Manager<BattleHandler>
         UIManager.Instance.SetUpTurnOrderPortraits(currentUnits);
     }
 
-    public void SetUpTurnOrder()
-    {
-    }
 
     void Update()
     {
@@ -167,7 +164,6 @@ public class BattleHandler : Manager<BattleHandler>
 
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);
 
-
         //Let effects run their course before setting enemy loose.
         yield return new WaitForSeconds(turnDelay);
 
@@ -180,6 +176,11 @@ public class BattleHandler : Manager<BattleHandler>
             yield return new WaitForSeconds(turnDelay);
             StartCoroutine(AdvanceTurn());
         }
+        else
+        {
+            UIManager.Instance.UpdateActiveUnitAbilities(activeUnit);
+        }
+
         controlLocked = false;
     }
 
