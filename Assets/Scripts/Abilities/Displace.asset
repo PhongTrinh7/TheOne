@@ -20,7 +20,7 @@ MonoBehaviour:
   initialDamage: 5
   damage: 5
   cost: 2
-  initialCooldown: 4
+  initialCooldown: 2
   cooldown: 0
   cooldownFill: 1
   onCooldown: 0

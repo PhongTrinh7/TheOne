@@ -85,7 +85,6 @@ public class BattleHandler : Manager<BattleHandler>
 
                 if (Input.GetKeyDown("space"))
                 {
-                    Debug.Log("space");
                     StartCoroutine(AdvanceTurn());
                 }
             }
@@ -116,6 +115,8 @@ public class BattleHandler : Manager<BattleHandler>
                 {
                     StartCoroutine(activeUnit.Move(1, 0));
                 }
+
+                UIManager.Instance.UpdateActiveUnitAbilities(activeUnit);
             }
         }
         else
@@ -169,10 +170,8 @@ public class BattleHandler : Manager<BattleHandler>
 
         if (activeUnit.IsNpc)
         {
-            Debug.Log("enemy start");
             yield return StartCoroutine(EnemyTurn());
 
-            Debug.Log("enemy end");
             yield return new WaitForSeconds(turnDelay);
             StartCoroutine(AdvanceTurn());
         }
@@ -188,7 +187,6 @@ public class BattleHandler : Manager<BattleHandler>
     {
         Enemy activeEnemy = (Enemy)activeUnit;
         yield return StartCoroutine(activeEnemy.EnemyMove(board.rows, board.columns, currentUnwalkables));
-        Debug.Log("Enemy turn done.");
     }
 
     public void Ability1()

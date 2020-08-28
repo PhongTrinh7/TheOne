@@ -40,7 +40,7 @@ public class Displace : Ability
         if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
         {
             hit.transform.gameObject.GetComponent<MovingObject>().Launch(caster.facingDirection, displacement);
-            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(40);
+            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
         }
         else
         {
@@ -48,6 +48,6 @@ public class Displace : Ability
         }
 
         PlaceOnCooldown();
-        UIManager.Instance.UpdateActiveUnitAbilities(caster);
+        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

@@ -848,6 +848,8 @@ MonoBehaviour:
   portrait: {fileID: 8422495644443712382, guid: 85e1b794644137a418faebc6cc76149a,
     type: 3}
   turnIndicator: {fileID: 0}
+  damageNumber: {fileID: 8887227401818310891, guid: 9be4e5f3de9a75340b79f1c295a38bf9,
+    type: 3}
   health: 100
   speed: 5
   energy: 0

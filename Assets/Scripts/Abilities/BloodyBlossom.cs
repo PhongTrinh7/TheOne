@@ -67,7 +67,7 @@ public class BloodyBlossom : Ability
             {
                 wave.Add(spot);
             }
-
+            /*
             //spot 2
             spot2 = spot + Vector2.Perpendicular(dir);
 
@@ -94,13 +94,13 @@ public class BloodyBlossom : Ability
             else
             {
                 wave.Add(spot3);
-            }
+            }*/
             waves.Add(wave);
         }
 
         caster.PlaceHazardWave(bleedRoot, waves, 0.2f);
 
         PlaceOnCooldown();
-        UIManager.Instance.UpdateActiveUnitAbilities(caster);
+        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

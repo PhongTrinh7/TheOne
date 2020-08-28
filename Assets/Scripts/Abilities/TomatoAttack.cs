@@ -100,7 +100,7 @@ public class TomatoAttack : Ability
 
         caster.PlaceHazardWave(bleedRoot, waves, 0.2f);
 
-        cooldown = initialCooldown;
-        onCooldown = true;
+        PlaceOnCooldown();
+        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

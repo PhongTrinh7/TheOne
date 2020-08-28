@@ -45,6 +45,6 @@ public class Heal : Ability
         }
 
         PlaceOnCooldown();
-        UIManager.Instance.UpdateActiveUnitAbilities(caster);
+        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

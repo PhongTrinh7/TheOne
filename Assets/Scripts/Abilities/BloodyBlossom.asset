@@ -19,8 +19,8 @@ MonoBehaviour:
   description: Sets a field of thorns.
   initialDamage: 0
   damage: 0
-  cost: 3
-  initialCooldown: 4
+  cost: 2
+  initialCooldown: 2
   cooldown: 0
   cooldownFill: 1
   onCooldown: 0

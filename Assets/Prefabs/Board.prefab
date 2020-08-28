@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rows: 6
-  columns: 6
+  columns: 12
   outerWallTiles:
   - {fileID: 3655163117366364902, guid: a9870a5aa4511784da80233dd57d8722, type: 3}
   - {fileID: 5841278203309984515, guid: ad08291851884944281e51ca199af09e, type: 3}

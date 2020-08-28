@@ -36,6 +36,7 @@ public abstract class MovingObject : MonoBehaviour
     public string name;
     public Image portrait;
     public GameObject turnIndicator;
+    public DamageNumber damageNumber;
 
     //Unit stats.
     public int health;
@@ -192,13 +193,13 @@ public abstract class MovingObject : MonoBehaviour
             }
             else
             {
-                Debug.Log("cast failed.");
+                Debug.Log(abilities[i] + " is on cooldown.");
                 ReturnToPriorState();
             }
         }
         else
         {
-            Debug.Log("cast failed.");
+            Debug.Log("Not enough energy!");
             ReturnToPriorState();
         }
     }
@@ -244,15 +245,15 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end, 3f));
+            yield return StartCoroutine(SmoothMovement(end, 2f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = direction;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 3f));
-            TakeDamage(50);
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
+            TakeDamage(3);
         }
 
         ReturnToPriorState();
@@ -330,8 +331,6 @@ public abstract class MovingObject : MonoBehaviour
             {
                 Instantiate(hazard, position, Quaternion.identity);
             }
-
-            Debug.Log("spawn wave");
             yield return new WaitForSeconds(waveDelay);
         }
     }
@@ -339,6 +338,14 @@ public abstract class MovingObject : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        if (damage < 0)
+        {
+            Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, true);
+        }
+        else
+        {
+            Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, false);
+        }
 
         if (!dead && health <= 0)
         {
