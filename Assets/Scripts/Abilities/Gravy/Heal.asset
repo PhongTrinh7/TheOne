@@ -9,20 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad79cba89f554a4b9984bbbbea6e4e1, type: 3}
-  m_Name: EnemyDisplace
+  m_Script: {fileID: 11500000, guid: 594540507b4072e40a13f50c1e7bb76b, type: 3}
+  m_Name: Heal
   m_EditorClassIdentifier: 
-  abilityName: 
+  abilityName: Heal
   characterRestriction: 
   abilitySlot: 0
   animationName: Attack
-  description: 
-  initialDamage: 2
-  damage: 2
+  description: Heal unit.
+  initialDamage: 0
+  damage: 20
   cost: 2
-  initialCooldown: 1
+  initialCooldown: 2
   cooldown: 0
   range: 0
   cooldownFill: 1
   onCooldown: 0
-  displacement: 2

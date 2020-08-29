@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIManager : Manager<UIManager>
@@ -15,6 +16,7 @@ public class UIManager : Manager<UIManager>
     //Battle UI
 
     //Player info
+    private MovingObject activeUnit;
     public HealthBar healthBar;
 
     //Buttons
@@ -22,13 +24,23 @@ public class UIManager : Manager<UIManager>
     [SerializeField] public Button b2;
     [SerializeField] public Button b3;
     [SerializeField] public Button b4;
+    public Button endTurn;
+
     public bool abilitiesOn;
 
     public Text health;
 
+    public EventTrigger trigger;
+
     void Start()
     {
         BattleUI();
+
+        /*trigger = GetComponentInParent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerClick;
+        entry.callback.AddListener((eventData) => { Foo(); });
+        trigger.triggers.Add(entry);*/
     }
 
     public void BattleUI()
@@ -43,10 +55,32 @@ public class UIManager : Manager<UIManager>
 
     public void UpdateActiveUnitAbilities(MovingObject activeUnit)
     {
+        this.activeUnit = activeUnit;
+
         b1.GetComponent<Image>().fillAmount = activeUnit.abilities[0].cooldownFill;
         b2.GetComponent<Image>().fillAmount = activeUnit.abilities[1].cooldownFill;
         b3.GetComponent<Image>().fillAmount = activeUnit.abilities[2].cooldownFill;
         b4.GetComponent<Image>().fillAmount = activeUnit.abilities[3].cooldownFill;
+    }
+
+    public void Tooltip0()
+    {
+        b1.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[0].Description());
+    }
+
+    public void Tooltip1()
+    {
+        b2.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[1].Description());
+    }
+
+    public void Tooltip2()
+    {
+        b3.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[2].Description());
+    }
+
+    public void Tooltip3()
+    {
+        b4.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[3].Description());
     }
 
     public void SetSkillsUninteractable()
@@ -87,6 +121,8 @@ public class UIManager : Manager<UIManager>
         {
             turnOrderPortraits.Add(Instantiate(unit.portrait, turnOrderPanel.transform));
         }
+
+        turnOrderPortraits[0].rectTransform.sizeDelta = new Vector2(72, 72);
     }
 
     public void UpdateTurnOrderPortraits(Queue<MovingObject> currentUnits)
@@ -102,5 +138,7 @@ public class UIManager : Manager<UIManager>
         {
             turnOrderPortraits.Add(Instantiate(unit.portrait, turnOrderPanel.transform));
         }
+
+        turnOrderPortraits[0].rectTransform.sizeDelta = new Vector2(72, 72);
     }
 }

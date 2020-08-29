@@ -2,16 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BloodyBlossom")]
-public class BloodyBlossom : Ability
+[CreateAssetMenu(fileName = "Entangle")]
+public class Entangle : Ability
 {
-    public BleedRoot bleedRoot;
-    public int range;
-
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
+    public EntangleRoot entangleRoot;
 
     public override bool Cast(MovingObject caster)
     {
@@ -48,7 +42,7 @@ public class BloodyBlossom : Ability
         //Check if there is already an environmental hazard in that spot.
         //caster.CastMaskDetect(end, end, bleedRoot.environmentalHazard, out hit2);
 
-        for (int i = 1; i < range + 1; i++)
+        for (int i = 2; i < range + 2; i++)
         {
             List<Vector3> wave = new List<Vector3>();
 
@@ -61,13 +55,13 @@ public class BloodyBlossom : Ability
 
             if (hit1.transform != null && hit1.transform.gameObject.CompareTag("Wall"))
             {
-
+                break;
             }
             else
             {
                 wave.Add(spot);
             }
-            /*
+            
             //spot 2
             spot2 = spot + Vector2.Perpendicular(dir);
 
@@ -94,11 +88,11 @@ public class BloodyBlossom : Ability
             else
             {
                 wave.Add(spot3);
-            }*/
+            }
             waves.Add(wave);
         }
 
-        caster.PlaceHazardWave(bleedRoot, waves, 0.2f);
+        caster.PlaceHazardWave(entangleRoot, waves, 0.2f);
 
         PlaceOnCooldown();
         //UIManager.Instance.UpdateActiveUnitAbilities(caster);

@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b7413919210a948b9b0610a7bec508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 6
+  rows: 7
   columns: 12
   outerWallTiles:
   - {fileID: 3655163117366364902, guid: a9870a5aa4511784da80233dd57d8722, type: 3}

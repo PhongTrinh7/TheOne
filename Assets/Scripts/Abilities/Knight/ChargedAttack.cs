@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Heal")]
-public class Heal : Ability
+[CreateAssetMenu(fileName = "ChargedAttack")]
+public class ChargedAttack : Ability
 {
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
+    public string dischargeAnimationName;
 
     public override bool Cast(MovingObject caster)
     {
@@ -17,9 +14,18 @@ public class Heal : Ability
             return false;
         }
 
-        caster.TriggerAnimation(animationName, abilitySlot);
+        damage = caster.energy;
+        caster.energy = 0;
+        caster.Charge(abilitySlot);
 
         return true;
+    }
+
+    public override void Discharge(MovingObject caster)
+    {
+        damage += caster.energy;
+        caster.energy = 0;
+        caster.TriggerAnimation(animationName, abilitySlot);
     }
 
     public override void Effect(MovingObject caster)
@@ -37,14 +43,14 @@ public class Heal : Ability
         //Check if anything was hit.
         if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
         {
-            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(-damage);
+            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
         }
+
         else
         {
             Debug.Log("nothing was hit");
         }
 
         PlaceOnCooldown();
-        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

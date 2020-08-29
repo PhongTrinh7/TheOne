@@ -9,14 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b002a9f0b60c1ef4c89bb4a021a1ca6d, type: 3}
-  m_Name: Dash
+  m_Script: {fileID: 11500000, guid: 5a37f223f92f0bb47a81678aa7db4668, type: 3}
+  m_Name: Immobilize
   m_EditorClassIdentifier: 
-  name: Dash
-  description: Dash forward 3 spaces.
-  initialDamage: 5
-  damage: 5
-  cost: 2
-  initialCooldown: 0
-  cooldown: 0
-  distance: 3
+  name: immobilize
+  description: Can't move.
+  damage: 0
+  duration: 3

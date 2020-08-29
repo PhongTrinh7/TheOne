@@ -38,6 +38,7 @@ public class BattleHandler : Manager<BattleHandler>
         UIManager.Instance.b2.onClick.AddListener(Ability2);
         UIManager.Instance.b3.onClick.AddListener(Ability3);
         UIManager.Instance.b4.onClick.AddListener(Ability4);
+        UIManager.Instance.endTurn.onClick.AddListener(ClickAdvanceTurn);
 
         //Set up pathfinding.
         currentUnwalkables = new List<Vector3>();
@@ -115,6 +116,22 @@ public class BattleHandler : Manager<BattleHandler>
                 {
                     StartCoroutine(activeUnit.Move(1, 0));
                 }
+                else if (Input.GetKeyDown("1"))
+                {
+                    Ability1();
+                }
+                else if (Input.GetKeyDown("2"))
+                {
+                    Ability2();
+                }
+                else if (Input.GetKeyDown("3"))
+                {
+                    Ability3();
+                }
+                else if (Input.GetKeyDown("4"))
+                {
+                    Ability4();
+                }
 
                 UIManager.Instance.UpdateActiveUnitAbilities(activeUnit);
             }
@@ -139,10 +156,18 @@ public class BattleHandler : Manager<BattleHandler>
         }
     }
 
+    void ClickAdvanceTurn()
+    {
+        StartCoroutine(AdvanceTurn());
+    }
+
     IEnumerator AdvanceTurn()
     {
         controlLocked = true;
         activeUnit.EndTurn();
+
+        //Let effects run their course before setting enemy loose.
+        yield return new WaitForSeconds(turnDelay);
 
         //Updates pathfinding based on current unit positions.
         UpdateUnwalkables();
@@ -164,9 +189,6 @@ public class BattleHandler : Manager<BattleHandler>
         activeUnit.StartTurn();
 
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);
-
-        //Let effects run their course before setting enemy loose.
-        yield return new WaitForSeconds(turnDelay);
 
         if (activeUnit.IsNpc)
         {

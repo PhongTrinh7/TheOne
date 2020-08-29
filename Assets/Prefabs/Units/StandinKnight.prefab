@@ -136,7 +136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.2399714, y: 0.00000023841858}
+  m_AnchoredPosition: {x: 0.2295053, y: 0.00000023841858}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: -0.000000026077032, y: 0.5}
 --- !u!222 &1729609248615528906
@@ -487,7 +487,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.23996758, y: 0.00000035762787}
+  m_AnchoredPosition: {x: 0.22950149, y: 0.00000035762787}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: -0.000000026077032, y: 0.5}
 --- !u!222 &4720031004376168709
@@ -702,17 +702,17 @@ MonoBehaviour:
   turnIndicator: {fileID: 0}
   damageNumber: {fileID: 8887227401818310891, guid: 9be4e5f3de9a75340b79f1c295a38bf9,
     type: 3}
-  health: 100
-  speed: 5
+  health: 50
+  speed: 7
   energy: 0
   healthBar: {fileID: 0}
   energyBar: {fileID: 0}
   energyRegen: 4
   abilitiesReference:
-  - {fileID: 11400000, guid: 67b53eef68e99994697a87b499174840, type: 2}
+  - {fileID: 11400000, guid: eaf1a96efeb5d6249ad5a5be66cdde2f, type: 2}
   - {fileID: 11400000, guid: 0c73a6d3231c8c14c90c0a8ecefa94a6, type: 2}
   - {fileID: 11400000, guid: 11a9350457e840f4cb47f3aecccb712b, type: 2}
-  - {fileID: 11400000, guid: e6d0ea461220c6c4d96a78a96cb9feb2, type: 2}
+  - {fileID: 11400000, guid: f2b822998fbaa6646823bcc16c822bb1, type: 2}
   abilities: []
   charging: 0
   loadedAbility: 0
@@ -721,6 +721,7 @@ MonoBehaviour:
   bleed: 0
   wet: 0
   shock: 0
+  immobilize: 0
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256

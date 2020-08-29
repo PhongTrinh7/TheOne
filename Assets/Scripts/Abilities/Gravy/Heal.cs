@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Displace")]
-public class Displace : Ability
+[CreateAssetMenu(fileName = "Heal")]
+public class Heal : Ability
 {
-    public int displacement;
-
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
-
     public override bool Cast(MovingObject caster)
     {
         if (onCooldown)
@@ -39,8 +32,7 @@ public class Displace : Ability
         //Check if anything was hit.
         if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
         {
-            hit.transform.gameObject.GetComponent<MovingObject>().Launch(caster.facingDirection, displacement);
-            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
+            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(-damage);
         }
         else
         {

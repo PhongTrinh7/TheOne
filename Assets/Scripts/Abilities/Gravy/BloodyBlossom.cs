@@ -2,25 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TomatoAttack")]
-public class TomatoAttack : Ability
+[CreateAssetMenu(fileName = "BloodyBlossom")]
+public class BloodyBlossom : Ability
 {
-    public Fire bleedRoot;
-    public int range;
-
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
+    public BleedRoot bleedRoot;
 
     public override bool Cast(MovingObject caster)
     {
-        caster.TriggerAnimation(animationName, abilitySlot);
-
         if (onCooldown)
         {
             return false;
         }
+
+        caster.TriggerAnimation(animationName, abilitySlot);
 
         return true;
     }
@@ -61,13 +55,13 @@ public class TomatoAttack : Ability
 
             if (hit1.transform != null && hit1.transform.gameObject.CompareTag("Wall"))
             {
-
+                break;
             }
             else
             {
                 wave.Add(spot);
             }
-
+            /*
             //spot 2
             spot2 = spot + Vector2.Perpendicular(dir);
 
@@ -94,7 +88,7 @@ public class TomatoAttack : Ability
             else
             {
                 wave.Add(spot3);
-            }
+            }*/
             waves.Add(wave);
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Ability : ScriptableObject
 {
-    public string name;
+    public string abilityName;
     public string characterRestriction;
     public int abilitySlot;
     public string animationName;
@@ -14,12 +14,14 @@ public abstract class Ability : ScriptableObject
     public int cost;
     public int initialCooldown;
     public int cooldown;
+    public int range;
     public float cooldownFill;
     public bool onCooldown = false;
 
-    public virtual void Description()
+    public virtual string Description()
     {
-        Debug.Log(name + ": " + description);
+        string summary = abilityName + "\n" + description + "\nDamage: " + damage + "\nCost: " + cost + "\nCooldown: " + initialCooldown + "\nRange: " + range;
+        return summary;
     }
 
     public abstract bool Cast(MovingObject caster);

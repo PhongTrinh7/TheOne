@@ -1,4 +1,4 @@
-﻿/*using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,17 +7,21 @@ public class Dash : Ability
 {
     public int distance;
 
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
-
     public override bool Cast(MovingObject caster)
     {
-        Debug.Log("Dash Attack");
+        if (onCooldown)
+        {
+            return false;
+        }
 
         caster.Dash(caster.facingDirection, distance, damage);
+        PlaceOnCooldown();
 
         return true;
     }
-}*/
+
+    public override void Effect(MovingObject caster)
+    {
+        PlaceOnCooldown();
+    }
+}

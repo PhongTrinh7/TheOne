@@ -58,6 +58,7 @@ public abstract class MovingObject : MonoBehaviour
     public bool bleed;
     public bool wet;
     public bool shock;
+    public bool immobilize;
 
     //Movement
     protected float moveSpeed = 20f;
@@ -69,7 +70,6 @@ public abstract class MovingObject : MonoBehaviour
     //Collision detection
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
-    private Vector3 start;
 
     //Animations
     private Animator anim;
@@ -107,7 +107,7 @@ public abstract class MovingObject : MonoBehaviour
     //Move takes parameters for x direction, y direction and a RaycastHit2D to check collision.
     public IEnumerator Move(int xDir, int yDir)
     {
-        if (stun)
+        if (stun || immobilize)
         {
             Debug.Log("Can't move");
             yield break;
@@ -126,7 +126,7 @@ public abstract class MovingObject : MonoBehaviour
 
             yield return null;
         }
-        else
+        else if (energy >= moveCost)
         {
             //Store start position to move from, based on objects current transform position.
             Vector2 start = transform.position;
@@ -139,15 +139,9 @@ public abstract class MovingObject : MonoBehaviour
             CastHitDetectBlocking(end, end, out hit);
 
             //Check if anything was hit
-            if (hit.transform == null && energy > 0)
+            if (hit.transform == null)
             {
-                if (wet)
-                {
-                    energy--;
-                }
-
-                energy--;
-                //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
+                energy -= moveCost;
 
                 //Movement animation.
                 anim.SetBool("Moving", true);
@@ -266,8 +260,8 @@ public abstract class MovingObject : MonoBehaviour
 
     public IEnumerator DashCoroutine(Vector2 direction, int distance, int damage)
     {
-        priorState = state;
         state = UnitState.BUSY;
+        anim.SetBool("Dashing", true);
 
         //Store start position to move from, based on objects current transform position.
         Vector2 start = (Vector2) transform.position + direction;
@@ -283,21 +277,22 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end, 2f));
+            yield return StartCoroutine(SmoothMovement(end, 3f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = facingDirection;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 3f));
             if (hit.transform.gameObject.CompareTag("Enemy"))
             {
                 hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
             }
         }
 
-        ReturnToPriorState();
+        anim.SetBool("Dashing", false);
+        state = UnitState.ACTIVE;
     }
 
     public void Charge(int abilitySlot)

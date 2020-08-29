@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Wet")]
-public class Wet : StatusEffect
+[CreateAssetMenu(fileName = "Immobilize")]
+public class Immobilize : StatusEffect
 {
-    public Stun stun;
-
     public override void Description()
     {
         Debug.Log(name + ": " + description);
@@ -17,32 +15,26 @@ public class Wet : StatusEffect
         this.target = target;
 
         //Make sure there is only one stack of wet on a unit at a time.
-        if (target.wet)
+        if (target.immobilize)
         {
-            StatusEffect wet = target.statuses.Find(x => x.name == "wet");
-            target.statuses.Remove(wet);
-            Destroy(wet);
+            StatusEffect immobilize = target.statuses.Find(x => x.name == "immobilize");
+            target.statuses.Remove(immobilize);
+            Destroy(immobilize);
         }
         else
         {
-            if (target.shock)
-            {
-                target.ApplyStatus(Object.Instantiate(stun));
-            }
-            target.wet = true;
+            target.immobilize = true;
         }
     }
 
     public override void Effect()
     {
-        target.moveCost = 2;
         timer++;
     }
 
     public override void ClearStatus()
     {
-        target.wet = false;
-        target.moveCost = 1;
+        target.immobilize = false;
         target.statuses.Remove(this);
         Destroy(this);
     }
