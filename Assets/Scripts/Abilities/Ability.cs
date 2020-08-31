@@ -17,11 +17,28 @@ public abstract class Ability : ScriptableObject
     public int range;
     public float cooldownFill;
     public bool onCooldown = false;
+    public LayerMask layermask;
+    public Color32 highlightColor;
+    protected List<GameObject> highlightedTiles = new List<GameObject>();
 
     public virtual string Description()
     {
         string summary = abilityName + "\n" + description + "\nDamage: " + damage + "\nCost: " + cost + "\nCooldown: " + initialCooldown + "\nRange: " + range;
         return summary;
+    }
+
+    public abstract void ShowRange(MovingObject caster);
+
+    public virtual void HideRange(MovingObject caster)
+    {
+        if (highlightedTiles.Count != 0)
+        {
+            foreach (GameObject tile in highlightedTiles)
+            {
+                tile.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+            highlightedTiles.Clear();
+        }
     }
 
     public abstract bool Cast(MovingObject caster);

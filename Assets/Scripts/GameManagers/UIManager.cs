@@ -35,12 +35,6 @@ public class UIManager : Manager<UIManager>
     void Start()
     {
         BattleUI();
-
-        /*trigger = GetComponentInParent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerClick;
-        entry.callback.AddListener((eventData) => { Foo(); });
-        trigger.triggers.Add(entry);*/
     }
 
     public void BattleUI()
@@ -57,9 +51,44 @@ public class UIManager : Manager<UIManager>
     {
         this.activeUnit = activeUnit;
 
+        if (activeUnit.abilities[0].cooldownFill != 1)
+        {
+            b1.interactable = false;
+        }
+        else
+        {
+            b1.interactable = true;
+        }
         b1.GetComponent<Image>().fillAmount = activeUnit.abilities[0].cooldownFill;
+
+        if (activeUnit.abilities[1].cooldownFill != 1)
+        {
+            b2.interactable = false;
+        }
+        else
+        {
+            b2.interactable = true;
+        }
         b2.GetComponent<Image>().fillAmount = activeUnit.abilities[1].cooldownFill;
+
+        if (activeUnit.abilities[2].cooldownFill != 1)
+        {
+            b3.interactable = false;
+        }
+        else
+        {
+            b3.interactable = true;
+        }
         b3.GetComponent<Image>().fillAmount = activeUnit.abilities[2].cooldownFill;
+
+        if (activeUnit.abilities[3].cooldownFill != 1)
+        {
+            b4.interactable = false;
+        }
+        else
+        {
+            b4.interactable = true;
+        }
         b4.GetComponent<Image>().fillAmount = activeUnit.abilities[3].cooldownFill;
     }
 
@@ -81,6 +110,46 @@ public class UIManager : Manager<UIManager>
     public void Tooltip3()
     {
         b4.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[3].Description());
+    }
+
+    public void ShowRange1()
+    {
+        activeUnit.abilities[0].ShowRange(activeUnit);
+    }
+
+    public void ShowRange2()
+    {
+        activeUnit.abilities[1].ShowRange(activeUnit);
+    }
+
+    public void ShowRange3()
+    {
+        activeUnit.abilities[2].ShowRange(activeUnit);
+    }
+
+    public void ShowRange4()
+    {
+        activeUnit.abilities[3].ShowRange(activeUnit);
+    }
+
+    public void HideRange1()
+    {
+        activeUnit.abilities[0].HideRange(activeUnit);
+    }
+
+    public void HideRange2()
+    {
+        activeUnit.abilities[1].HideRange(activeUnit);
+    }
+
+    public void HideRange3()
+    {
+        activeUnit.abilities[2].HideRange(activeUnit);
+    }
+
+    public void HideRange4()
+    {
+        activeUnit.abilities[3].HideRange(activeUnit);
     }
 
     public void SetSkillsUninteractable()

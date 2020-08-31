@@ -25,4 +25,10 @@ MonoBehaviour:
   range: 0
   cooldownFill: 1
   onCooldown: 0
+  layermask:
+    serializedVersion: 2
+    m_Bits: 1024
+  highlightColor:
+    serializedVersion: 2
+    rgba: 255
   displacement: 3

@@ -7,6 +7,31 @@ public class Displace : Ability
 {
     public int displacement;
 
+    public override void ShowRange(MovingObject caster)
+    {
+        //Store start position.
+        Vector2 start = caster.transform.position;
+
+        // Calculate cast direction based on the direction the unit is facing.
+        Vector2 end = start + caster.facingDirection;
+
+        RaycastHit2D hit;
+
+        caster.CastMaskDetect(end, end, layermask, out hit);
+
+        //Check if anything was hit.
+        if (hit.transform != null)
+        {
+            Debug.Log("highlight");
+            highlightedTiles.Add(hit.transform.gameObject);
+            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+        }
+        else
+        {
+            Debug.Log("no highlight");
+        }
+    }
+
     public override bool Cast(MovingObject caster)
     {
         if (onCooldown)

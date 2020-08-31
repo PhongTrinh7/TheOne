@@ -61,7 +61,7 @@ public abstract class MovingObject : MonoBehaviour
     public bool immobilize;
 
     //Movement
-    protected float moveSpeed = 20f;
+    protected float moveSpeed = 5f;
     protected float inverseMoveTime;
     public LayerMask blockingLayer;
     public Vector2 facingDirection;
@@ -159,7 +159,7 @@ public abstract class MovingObject : MonoBehaviour
 
         while (sqrRemainingDistance > float.Epsilon)
         {
-            Vector3 newPosition = Vector3.MoveTowards(rb2D.position, end, speedMultiplier * moveSpeed * Time.deltaTime);
+            Vector3 newPosition = Vector3.MoveTowards(rb2D.position, end, speedMultiplier * moveSpeed * Time.fixedDeltaTime);
             rb2D.MovePosition(newPosition);
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
             yield return null;
@@ -357,26 +357,14 @@ public abstract class MovingObject : MonoBehaviour
 
     public void CastMaskDetect(Vector2 start, Vector2 end, LayerMask layerMask, out RaycastHit2D hit)
     {
-        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
-        boxCollider.enabled = false;
-
         //Cast a line from start point to end point checking collision on a LayerMask.
         hit = Physics2D.Linecast(start, end, layerMask);
-
-        //Re-enable boxCollider after linecast.
-        boxCollider.enabled = true;
     }
 
     public void CastHitDetectBlocking(Vector2 start, Vector2 end, out RaycastHit2D hit)
     {
-        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
-        //boxCollider.enabled = false;
-
         //Cast a line from start point to end point checking collision on blockingLayer.
         hit = Physics2D.Linecast(start, end, blockingLayer);
-
-        //Re-enable boxCollider after linecast.
-        //boxCollider.enabled = true;
     }
 
     //Status handling.
