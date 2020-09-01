@@ -36,6 +36,7 @@ public abstract class MovingObject : MonoBehaviour
     public string name;
     public Image portrait;
     public GameObject turnIndicator;
+    public DamageNumber damageNumber;
 
     //Unit stats.
     public int health;
@@ -57,10 +58,11 @@ public abstract class MovingObject : MonoBehaviour
     public bool bleed;
     public bool wet;
     public bool shock;
+    public bool immobilize;
 
     //Movement
-    protected float moveTime = 0.2f;
-    private float inverseMoveTime;
+    protected float moveSpeed = 5f;
+    protected float inverseMoveTime;
     public LayerMask blockingLayer;
     public Vector2 facingDirection;
     public int moveCost = 1;
@@ -68,7 +70,6 @@ public abstract class MovingObject : MonoBehaviour
     //Collision detection
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
-    private Vector3 start;
 
     //Animations
     private Animator anim;
@@ -79,7 +80,7 @@ public abstract class MovingObject : MonoBehaviour
         //Collision detection.
         boxCollider = GetComponent<BoxCollider2D>(); // for collision
         rb2D = GetComponent<Rigidbody2D>(); // for collision
-        inverseMoveTime = 1f / moveTime; // for smooth movement
+        inverseMoveTime = 1f / moveSpeed; // for smooth movement
         anim = GetComponent<Animator>(); // get animator
 
         //Get reference to health bar.
@@ -106,7 +107,7 @@ public abstract class MovingObject : MonoBehaviour
     //Move takes parameters for x direction, y direction and a RaycastHit2D to check collision.
     public IEnumerator Move(int xDir, int yDir)
     {
-        if (stun)
+        if (stun || immobilize)
         {
             Debug.Log("Can't move");
             yield break;
@@ -125,7 +126,7 @@ public abstract class MovingObject : MonoBehaviour
 
             yield return null;
         }
-        else
+        else if (energy >= moveCost)
         {
             //Store start position to move from, based on objects current transform position.
             Vector2 start = transform.position;
@@ -138,19 +139,13 @@ public abstract class MovingObject : MonoBehaviour
             CastHitDetectBlocking(end, end, out hit);
 
             //Check if anything was hit
-            if (hit.transform == null && energy > 0)
+            if (hit.transform == null)
             {
-                if (wet)
-                {
-                    energy--;
-                }
-
-                energy--;
-                //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
+                energy -= moveCost;
 
                 //Movement animation.
                 anim.SetBool("Moving", true);
-                yield return StartCoroutine(SmoothMovement(end));
+                yield return StartCoroutine(SmoothMovement(end, 1f));
             }
         }
 
@@ -158,13 +153,13 @@ public abstract class MovingObject : MonoBehaviour
         ReturnToPriorState();
     }
 
-    protected IEnumerator SmoothMovement(Vector3 end)
+    protected IEnumerator SmoothMovement(Vector3 end, float speedMultiplier)
     {
         float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
         while (sqrRemainingDistance > float.Epsilon)
         {
-            Vector3 newPosition = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
+            Vector3 newPosition = Vector3.MoveTowards(rb2D.position, end, speedMultiplier * moveSpeed * Time.fixedDeltaTime);
             rb2D.MovePosition(newPosition);
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
             yield return null;
@@ -192,13 +187,13 @@ public abstract class MovingObject : MonoBehaviour
             }
             else
             {
-                Debug.Log("cast failed.");
+                Debug.Log(abilities[i] + " is on cooldown.");
                 ReturnToPriorState();
             }
         }
         else
         {
-            Debug.Log("cast failed.");
+            Debug.Log("Not enough energy!");
             ReturnToPriorState();
         }
     }
@@ -244,15 +239,15 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end));
+            yield return StartCoroutine(SmoothMovement(end, 2f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = direction;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset));
-            TakeDamage(50);
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
+            TakeDamage(3);
         }
 
         ReturnToPriorState();
@@ -265,8 +260,8 @@ public abstract class MovingObject : MonoBehaviour
 
     public IEnumerator DashCoroutine(Vector2 direction, int distance, int damage)
     {
-        priorState = state;
         state = UnitState.BUSY;
+        anim.SetBool("Dashing", true);
 
         //Store start position to move from, based on objects current transform position.
         Vector2 start = (Vector2) transform.position + direction;
@@ -282,21 +277,22 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end));
+            yield return StartCoroutine(SmoothMovement(end, 3f));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = facingDirection;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 3f));
             if (hit.transform.gameObject.CompareTag("Enemy"))
             {
                 hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
             }
         }
 
-        ReturnToPriorState();
+        anim.SetBool("Dashing", false);
+        state = UnitState.ACTIVE;
     }
 
     public void Charge(int abilitySlot)
@@ -330,8 +326,6 @@ public abstract class MovingObject : MonoBehaviour
             {
                 Instantiate(hazard, position, Quaternion.identity);
             }
-
-            Debug.Log("spawn wave");
             yield return new WaitForSeconds(waveDelay);
         }
     }
@@ -339,11 +333,23 @@ public abstract class MovingObject : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        if (damage < 0)
+        {
+            Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, true);
+        }
+        else
+        {
+            Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, false);
+        }
 
         if (!dead && health <= 0)
         {
             health = 0;
             dead = true;
+        }
+        else if (dead && health > 0)
+        {
+            dead = false;
         }
 
         healthBar.SetCurrentHealth(health);
@@ -351,26 +357,14 @@ public abstract class MovingObject : MonoBehaviour
 
     public void CastMaskDetect(Vector2 start, Vector2 end, LayerMask layerMask, out RaycastHit2D hit)
     {
-        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
-        boxCollider.enabled = false;
-
         //Cast a line from start point to end point checking collision on a LayerMask.
         hit = Physics2D.Linecast(start, end, layerMask);
-
-        //Re-enable boxCollider after linecast.
-        boxCollider.enabled = true;
     }
 
     public void CastHitDetectBlocking(Vector2 start, Vector2 end, out RaycastHit2D hit)
     {
-        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
-        //boxCollider.enabled = false;
-
         //Cast a line from start point to end point checking collision on blockingLayer.
         hit = Physics2D.Linecast(start, end, blockingLayer);
-
-        //Re-enable boxCollider after linecast.
-        //boxCollider.enabled = true;
     }
 
     //Status handling.

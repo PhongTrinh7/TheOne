@@ -13,6 +13,7 @@ public class BattleHandler : Manager<BattleHandler>
 
     //Handles turns.
     public int currentTurn = 0;
+    public float turnDelay = .7f;
     public MovingObject activeUnit;
     public Queue<MovingObject> currentUnits;
 
@@ -37,6 +38,7 @@ public class BattleHandler : Manager<BattleHandler>
         UIManager.Instance.b2.onClick.AddListener(Ability2);
         UIManager.Instance.b3.onClick.AddListener(Ability3);
         UIManager.Instance.b4.onClick.AddListener(Ability4);
+        UIManager.Instance.endTurn.onClick.AddListener(ClickAdvanceTurn);
 
         //Set up pathfinding.
         currentUnwalkables = new List<Vector3>();
@@ -55,9 +57,6 @@ public class BattleHandler : Manager<BattleHandler>
         UIManager.Instance.SetUpTurnOrderPortraits(currentUnits);
     }
 
-    public void SetUpTurnOrder()
-    {
-    }
 
     void Update()
     {
@@ -87,7 +86,6 @@ public class BattleHandler : Manager<BattleHandler>
 
                 if (Input.GetKeyDown("space"))
                 {
-                    Debug.Log("space");
                     StartCoroutine(AdvanceTurn());
                 }
             }
@@ -118,6 +116,24 @@ public class BattleHandler : Manager<BattleHandler>
                 {
                     StartCoroutine(activeUnit.Move(1, 0));
                 }
+                else if (Input.GetKeyDown("1"))
+                {
+                    Ability1();
+                }
+                else if (Input.GetKeyDown("2"))
+                {
+                    Ability2();
+                }
+                else if (Input.GetKeyDown("3"))
+                {
+                    Ability3();
+                }
+                else if (Input.GetKeyDown("4"))
+                {
+                    Ability4();
+                }
+
+                UIManager.Instance.UpdateActiveUnitAbilities(activeUnit);
             }
         }
         else
@@ -140,10 +156,18 @@ public class BattleHandler : Manager<BattleHandler>
         }
     }
 
+    void ClickAdvanceTurn()
+    {
+        StartCoroutine(AdvanceTurn());
+    }
+
     IEnumerator AdvanceTurn()
     {
         controlLocked = true;
         activeUnit.EndTurn();
+
+        //Let effects run their course before setting enemy loose.
+        yield return new WaitForSeconds(turnDelay);
 
         //Updates pathfinding based on current unit positions.
         UpdateUnwalkables();
@@ -155,6 +179,7 @@ public class BattleHandler : Manager<BattleHandler>
 
         //Next up in line goes.
         activeUnit = currentUnits.Peek();
+
         if (activeUnit.dead)
         {
             RemoveUnit(currentUnits.Dequeue());
@@ -165,19 +190,18 @@ public class BattleHandler : Manager<BattleHandler>
 
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);
 
-
-        //Let effects run their course before setting enemy loose.
-        yield return new WaitForSeconds(.5f);
-
         if (activeUnit.IsNpc)
         {
-            Debug.Log("enemy start");
             yield return StartCoroutine(EnemyTurn());
 
-            Debug.Log("enemy end");
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(turnDelay);
             StartCoroutine(AdvanceTurn());
         }
+        else
+        {
+            UIManager.Instance.UpdateActiveUnitAbilities(activeUnit);
+        }
+
         controlLocked = false;
     }
 
@@ -185,7 +209,6 @@ public class BattleHandler : Manager<BattleHandler>
     {
         Enemy activeEnemy = (Enemy)activeUnit;
         yield return StartCoroutine(activeEnemy.EnemyMove(board.rows, board.columns, currentUnwalkables));
-        Debug.Log("Enemy turn done.");
     }
 
     public void Ability1()
@@ -208,6 +231,7 @@ public class BattleHandler : Manager<BattleHandler>
         activeUnit.CastAbility(3);
     }
 
+    //Send them to the shadow realms.
     public void RemoveUnit(MovingObject unit)
     {
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);

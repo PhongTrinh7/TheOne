@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ad79cba89f554a4b9984bbbbea6e4e1, type: 3}
   m_Name: EnemyDisplace
   m_EditorClassIdentifier: 
-  name: EnemyDisplace
+  abilityName: 
   characterRestriction: 
   abilitySlot: 0
   animationName: Attack
@@ -20,7 +20,9 @@ MonoBehaviour:
   initialDamage: 2
   damage: 2
   cost: 2
-  initialCooldown: 2
+  initialCooldown: 1
   cooldown: 0
+  range: 0
+  cooldownFill: 1
   onCooldown: 0
-  displacement: 1
+  displacement: 2

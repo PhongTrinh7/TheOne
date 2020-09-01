@@ -35,12 +35,14 @@ public class Wet : StatusEffect
 
     public override void Effect()
     {
+        target.moveCost = 2;
         timer++;
     }
 
     public override void ClearStatus()
     {
         target.wet = false;
+        target.moveCost = 1;
         target.statuses.Remove(this);
         Destroy(this);
     }

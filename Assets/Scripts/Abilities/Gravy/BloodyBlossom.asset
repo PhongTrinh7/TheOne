@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb8e62eeb2db0d48903e77dfb3ffcc8, type: 3}
+  m_Name: BloodyBlossom
+  m_EditorClassIdentifier: 
+  abilityName: Blood Blossom
+  characterRestriction: 
+  abilitySlot: 1
+  animationName: Attack
+  description: Sets down Bloodroot hazards.
+  initialDamage: 0
+  damage: 0
+  cost: 2
+  initialCooldown: 2
+  cooldown: 0
+  range: 3
+  cooldownFill: 1
+  onCooldown: 0
+  bleedRoot: {fileID: 5315779032009509307, guid: f508f41209d147b4e971bf0c27b68dbb,
+    type: 3}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
 //Enemy inherits from MovingObject, our base class for objects that can move, Player also inherits from this.
@@ -8,6 +9,7 @@ public class Enemy : MovingObject
 {
     private Pathfinding pathfinding;
     private List<PathNode> path;
+    private GameObject[] targets;
     private Transform target;
 
     //private Animator animator;							//Variable of type Animator to store a reference to the enemy's Animator component.
@@ -27,20 +29,59 @@ public class Enemy : MovingObject
         UnitState priorState = state;
         state = UnitState.BUSY;
 
-        if (health <= 0 || stun)
-        {
+        if (dead || stun) {
             state = priorState;
             yield break;
         }
 
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        targets = GameObject.FindGameObjectsWithTag("Player");
 
-        currentUnwalkables.Remove(transform.position);
-        currentUnwalkables.Remove(target.position);
+        int temp = int.MaxValue;
+        List<PathNode> tempPath = new List<PathNode>();
 
-        pathfinding = new Pathfinding(columns, rows, currentUnwalkables);
+        foreach (GameObject t in targets)
+        {
+            /*if (t.GetComponent<MovingObject>().health < tHealth)
+            {
+                tHealth = t.GetComponent<MovingObject>().health;
+                target = t.transform;
 
-        path = pathfinding.FindPath((int)transform.position.x, (int)transform.position.y, (int)target.position.x, (int)target.position.y);
+                currentUnwalkables.Remove(target.position);
+
+                currentUnwalkables.Remove(transform.position);
+
+                pathfinding = new Pathfinding(columns, rows, currentUnwalkables);
+
+                path = pathfinding.FindPath((int)transform.position.x, (int)transform.position.y, (int)target.position.x, (int)target.position.y);
+            }*/
+
+                currentUnwalkables.Remove(t.transform.position);
+
+                currentUnwalkables.Remove(transform.position);
+
+                pathfinding = new Pathfinding(columns, rows, currentUnwalkables);
+
+                path = pathfinding.FindPath((int)transform.position.x, (int)transform.position.y, (int)t.transform.position.x, (int)t.transform.position.y);
+
+            if (path != null && path.Count < temp)
+            {
+                temp = path.Count;
+                tempPath = path;
+                target = t.transform;
+            }
+            else
+            {
+                path = tempPath;
+            }
+
+            currentUnwalkables.Add(t.transform.position);
+        }
+
+        if (path == null)
+        {
+            Debug.Log("No possible routes to targets!");
+            yield break;
+        }
 
         if (path.Count == 0)
         {
@@ -54,7 +95,7 @@ public class Enemy : MovingObject
             {
                 facingDirection = path[i].coord - transform.position;
                 ChangeFacingDirection(facingDirection);
-                StartCoroutine(Move((int)facingDirection.x, (int)facingDirection.y));
+                yield return StartCoroutine(Move((int)facingDirection.x, (int)facingDirection.y));
 
                 if (health <= 0 || stun)
                 {
@@ -62,7 +103,7 @@ public class Enemy : MovingObject
                     yield break;
                 }
 
-                yield return new WaitForSeconds(.7f);
+                yield return new WaitForSeconds(.2f);
 
                 if (Vector3.Distance(transform.position, target.position) <= 1)
                 {
