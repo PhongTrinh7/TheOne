@@ -30,5 +30,6 @@ MonoBehaviour:
     m_Bits: 1024
   highlightColor:
     serializedVersion: 2
-    rgba: 255
+    rgba: 4286743295
+  affectedTiles: []
   displacement: 3

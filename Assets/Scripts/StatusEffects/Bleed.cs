@@ -13,7 +13,10 @@ public class Bleed : StatusEffect
     public override void OnApply(MovingObject target)
     {
         this.target = target;
-        target.bleed = true;
+        if (!target.bleed)
+        {
+            target.bleed = true;
+        }
     }
 
     public override void Effect()
@@ -24,8 +27,13 @@ public class Bleed : StatusEffect
 
     public override void ClearStatus()
     {
-        target.bleed = false;
         target.statuses.Remove(this);
+
+        if (target.statuses.Find(x => x.name == "bleed") == null)
+        {
+            target.bleed = false;
+        }
+
         Destroy(this);
     }
 }

@@ -7,55 +7,49 @@ public class BloodyBlossom : Ability
 {
     public BleedRoot bleedRoot;
 
-    public override void ShowRange(MovingObject caster)
+    public override void ShowRange()
     {
         //Store start position.
         Vector2 start = caster.transform.position;
 
-        // Calculate cast direction based on the direction the unit is facing.
-        Vector2 end = start + caster.facingDirection;
+        Vector2 dir = caster.facingDirection;
 
-        RaycastHit2D hit;
+        RaycastHit2D[] hitLayerMask;
+        //RaycastHit2D hitBlockingLayer;
 
-        caster.CastMaskDetect(end, end, layermask, out hit);
 
-        //Check if anything was hit.
-        if (hit.transform != null)
+        for (int i = 1; i < range + 1; i++)
         {
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color32();
+            List<Vector3> wave = new List<Vector3>();
+
+            Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
+            Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
+
+            caster.CastMaskDetectMulti(spot1, spot2, layermask, out hitLayerMask);
+
+            foreach (RaycastHit2D hit in hitLayerMask)
+            {
+                if (hit.transform != null)
+                {
+                    affectedTiles.Add(hit.transform.gameObject);
+                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                }
+            }
         }
     }
 
-    public override void HideRange(MovingObject caster)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override bool Cast(MovingObject caster)
-    {
-        if (onCooldown)
-        {
-            return false;
-        }
-
-        caster.TriggerAnimation(animationName, abilitySlot);
-
-        return true;
-    }
-
-    public override void Effect(MovingObject caster)
+    public override void Effect()
     {
         List<List<Vector3>> waves = new List<List<Vector3>>();
-
+        /*
         //Store start position.
         Vector2 start = caster.transform.position;
 
         Vector2 dir = caster.facingDirection;
 
         //Store start position.
-        Vector2 spot;
-        Vector2 spot2;
-        Vector2 spot3;
+        //Vector2 spot2;
+        //Vector2 spot3;
 
         RaycastHit2D hit1;
         //RaycastHit2D hit2;
@@ -70,7 +64,7 @@ public class BloodyBlossom : Ability
         {
             List<Vector3> wave = new List<Vector3>();
 
-            spot = start + dir * i;
+            Vector2 spot = start + dir * i;
 
             caster.CastHitDetectBlocking(spot, spot, out hit1);
 
@@ -112,13 +106,41 @@ public class BloodyBlossom : Ability
             else
             {
                 wave.Add(spot3);
-            }*/
+            }
+            waves.Add(wave);
+        }*/
+
+        //Store start position.
+        Vector2 start = caster.transform.position;
+
+        Vector2 dir = caster.facingDirection;
+
+        RaycastHit2D[] hitLayerMask;
+
+        for (int i = 1; i < range + 1; i++)
+        {
+            List<Vector3> wave = new List<Vector3>();
+
+            Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
+            Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
+
+            caster.CastMaskDetectMulti(spot1, spot2, layermask, out hitLayerMask);
+
+            foreach (RaycastHit2D hit in hitLayerMask)
+            {
+                Vector2 spot = hit.transform.position;
+
+                RaycastHit2D hitBL;
+                caster.CastHitDetectBlockingSingle(spot, spot, out hitBL);
+
+                if (hitBL.transform == null || !hitBL.transform.gameObject.CompareTag("Wall"))
+                {
+                    wave.Add(hit.transform.position);
+                }
+            }
             waves.Add(wave);
         }
 
         caster.PlaceHazardWave(bleedRoot, waves, 0.2f);
-
-        PlaceOnCooldown();
-        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

@@ -13,7 +13,8 @@ public abstract class MovingObject : MonoBehaviour
         IDLE,
         ACTIVE,
         BUSY,
-        CHARGING
+        CHARGING,
+        READYUP
     }
 
     public UnitState state = UnitState.IDLE;
@@ -33,7 +34,7 @@ public abstract class MovingObject : MonoBehaviour
         get { return isNpc; }
     }
 
-    public string name;
+    public string unitName;
     public Image portrait;
     public GameObject turnIndicator;
     public DamageNumber damageNumber;
@@ -44,7 +45,7 @@ public abstract class MovingObject : MonoBehaviour
     public int energy;
     public HealthBar healthBar;
     public EnergyBar energyBar;
-    public int energyRegen = 4;
+    public int energyRegen;
 
     //Unit Abilities.
     public List<Ability> abilitiesReference;
@@ -53,15 +54,21 @@ public abstract class MovingObject : MonoBehaviour
     public int loadedAbility;
 
     //Status effects.
+    public Image statusEffectContainer;
     public List<StatusEffect> statuses;
-    public bool stun;
     public bool bleed;
+    public Image bleedIcon;
     public bool wet;
+    public Image wetIcon;
     public bool shock;
+    public Image shockIcon;
     public bool immobilize;
+    public Image immobilizeIcon;
+    public bool stun;
+    public Image stunIcon;
 
     //Movement
-    protected float moveSpeed = 5f;
+    public float moveSpeed;
     protected float inverseMoveTime;
     public LayerMask blockingLayer;
     public Vector2 facingDirection;
@@ -77,6 +84,8 @@ public abstract class MovingObject : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Awake()
     {
+        moveSpeed = 3f;
+
         //Collision detection.
         boxCollider = GetComponent<BoxCollider2D>(); // for collision
         rb2D = GetComponent<Rigidbody2D>(); // for collision
@@ -89,12 +98,21 @@ public abstract class MovingObject : MonoBehaviour
 
         //Get reference to energy bar.
         energyBar = transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<EnergyBar>();
-        energy = speed;
-        energyBar.SetMaxEnergy(energy);
+        energy = 0;
+        energyRegen = speed;
+        energyBar.SetMaxEnergy(12);
 
         //Get reference to the turn indicator.
         turnIndicator = transform.GetChild(0).transform.GetChild(2).gameObject;
         turnIndicator.SetActive(false);
+
+        //Get reference to the status effect container and status effects.
+        statusEffectContainer = transform.GetChild(0).transform.GetChild(3).gameObject.GetComponent<Image>();
+        bleedIcon = statusEffectContainer.transform.GetChild(0).gameObject.GetComponent<Image>();
+        wetIcon = statusEffectContainer.transform.GetChild(1).gameObject.GetComponent<Image>();
+        shockIcon = statusEffectContainer.transform.GetChild(2).gameObject.GetComponent<Image>();
+        immobilizeIcon = statusEffectContainer.transform.GetChild(3).gameObject.GetComponent<Image>();
+        stunIcon = statusEffectContainer.transform.GetChild(4).gameObject.GetComponent<Image>();
 
         //Refresh ability cooldowns each battle.
         foreach (Ability a in abilitiesReference)
@@ -136,7 +154,7 @@ public abstract class MovingObject : MonoBehaviour
 
             RaycastHit2D hit;
 
-            CastHitDetectBlocking(end, end, out hit);
+            CastHitDetectBlockingSingle(end, end, out hit);
 
             //Check if anything was hit
             if (hit.transform == null)
@@ -174,39 +192,56 @@ public abstract class MovingObject : MonoBehaviour
         anim.SetFloat("Vertical", direction.y);
     }
 
-    public void CastAbility(int i)
+    public bool ReadyAbility(int i)
     {
         priorState = state;
-        state = UnitState.BUSY;
+        state = UnitState.READYUP;
 
         if (energy >= abilities[i].cost)
         {
-            if (abilities[i].Cast(this))
+            if (abilities[i].Ready(this))
             {
-                energy -= abilities[i].cost;
+                loadedAbility = i;
+                return true;
             }
             else
             {
                 Debug.Log(abilities[i] + " is on cooldown.");
                 ReturnToPriorState();
+                return false;
             }
         }
         else
         {
             Debug.Log("Not enough energy!");
             ReturnToPriorState();
+            return false;
         }
     }
 
-    public void TriggerAnimation(string animationName, int abilitySlot)
+    public void CancelAbility()
     {
-        loadedAbility = abilitySlot;
+        abilities[loadedAbility].HideRange();
+        loadedAbility = -1;
+        state = UnitState.ACTIVE;
+        Debug.Log("Ability canceled.");
+    }
+
+    public void CastAbility()
+    {
+        state = UnitState.BUSY;
+        energy -= abilities[loadedAbility].cost;
+        abilities[loadedAbility].Cast();
+    }
+
+    public void TriggerAnimation(string animationName)
+    {
         anim.SetTrigger(animationName);
     }
 
     public void TriggerAbilityEffect()
     {
-        abilities[loadedAbility].Effect(this);
+        abilities[loadedAbility].Effect();
         loadedAbility = -1;
     }
 
@@ -223,7 +258,15 @@ public abstract class MovingObject : MonoBehaviour
     public IEnumerator LaunchCoroutine(Vector2 direction, int displacement)
     {
         priorState = state;
-        state = UnitState.BUSY;
+        if (state == UnitState.CHARGING)
+        {
+            Debug.Log("Hide");
+            abilities[loadedAbility].HideRange();
+        }
+        else
+        {
+            state = UnitState.BUSY;
+        }
 
         //Store start position to move from, based on objects current transform position.
         Vector2 start = (Vector2) transform.position + direction;
@@ -233,7 +276,7 @@ public abstract class MovingObject : MonoBehaviour
 
         RaycastHit2D hit;
 
-        CastHitDetectBlocking(start, end, out hit);
+        CastHitDetectBlockingSingle(start, end, out hit);
 
         //Check if anything was hit
         if (hit.transform == null)
@@ -250,7 +293,15 @@ public abstract class MovingObject : MonoBehaviour
             TakeDamage(3);
         }
 
-        ReturnToPriorState();
+        if (state == UnitState.CHARGING)
+        {
+            Debug.Log("show");
+            abilities[loadedAbility].ShowRange();
+        }
+        else
+        {
+            ReturnToPriorState();
+        }
     }
 
     public void Dash(Vector2 direction, int distance, int damage)
@@ -271,7 +322,7 @@ public abstract class MovingObject : MonoBehaviour
 
         RaycastHit2D hit;
 
-        CastHitDetectBlocking(start, end, out hit);
+        CastHitDetectBlockingSingle(start, end, out hit);
 
         //Check if anything was hit
         if (hit.transform == null)
@@ -285,22 +336,23 @@ public abstract class MovingObject : MonoBehaviour
             //If something is hit, collide with obstacle.
             Vector3 offset = facingDirection;
             yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 3f));
-            if (hit.transform.gameObject.CompareTag("Enemy"))
+            if (hit.transform.gameObject.CompareTag("Enemy") || hit.transform.gameObject.CompareTag("Player"))
             {
-                hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
+                abilities[loadedAbility].Effect();
+                //hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
             }
         }
 
+        loadedAbility = -1;
         anim.SetBool("Dashing", false);
         state = UnitState.ACTIVE;
     }
 
-    public void Charge(int abilitySlot)
+    public void Charge()
     {
         state = UnitState.CHARGING;
         charging = true;
         anim.SetBool("Charging", true);
-        loadedAbility = abilitySlot;
         Debug.Log("Charging");
     }
 
@@ -310,7 +362,7 @@ public abstract class MovingObject : MonoBehaviour
         state = UnitState.BUSY;
         charging = false;
         anim.SetBool("Charging", false);
-        abilities[loadedAbility].Discharge(this);
+        abilities[loadedAbility].Discharge();
     }
 
     public void PlaceHazardWave(EnvironmentalHazard hazard, List<List<Vector3>> waves, float waveDelay)
@@ -355,16 +407,28 @@ public abstract class MovingObject : MonoBehaviour
         healthBar.SetCurrentHealth(health);
     }
 
-    public void CastMaskDetect(Vector2 start, Vector2 end, LayerMask layerMask, out RaycastHit2D hit)
+    public void CastMaskDetectSingle(Vector2 start, Vector2 end, LayerMask layerMask, out RaycastHit2D hit)
     {
         //Cast a line from start point to end point checking collision on a LayerMask.
         hit = Physics2D.Linecast(start, end, layerMask);
     }
 
-    public void CastHitDetectBlocking(Vector2 start, Vector2 end, out RaycastHit2D hit)
+    public void CastMaskDetectMulti(Vector2 start, Vector2 end, LayerMask layerMask, out RaycastHit2D[] hit)
+    {
+        //Cast a line from start point to end point checking collision on a LayerMask.
+        hit = Physics2D.LinecastAll(start, end, layerMask);
+    }
+
+    public void CastHitDetectBlockingSingle(Vector2 start, Vector2 end, out RaycastHit2D hit)
     {
         //Cast a line from start point to end point checking collision on blockingLayer.
         hit = Physics2D.Linecast(start, end, blockingLayer);
+    }
+
+    public void CastHitDetectBlockingMulti(Vector2 start, Vector2 end, out RaycastHit2D[] hit)
+    {
+        //Cast a line from start point to end point checking collision on blockingLayer.
+        hit = Physics2D.LinecastAll(start, end, blockingLayer);
     }
 
     //Status handling.
@@ -396,7 +460,11 @@ public abstract class MovingObject : MonoBehaviour
         Debug.Log(this + " starts turn.");
         isTurn = true;
         turnIndicator.SetActive(isTurn);
-        energy = speed;
+        energy += energyRegen;
+        if (energy > 12)
+        {
+            energy = 12;
+        }
         ApplyEffects();
         HandleCooldowns();
 
@@ -416,7 +484,10 @@ public abstract class MovingObject : MonoBehaviour
 
     public void EndTurn()
     {
-        state = UnitState.IDLE;
+        if (!charging)
+        {
+            state = UnitState.IDLE;
+        }
         isTurn = false;
         turnIndicator.SetActive(isTurn);
         Debug.Log("Ending Turn");
@@ -430,5 +501,11 @@ public abstract class MovingObject : MonoBehaviour
     public void Update()
     {
         energyBar.SetCurrentEnergy(energy);
+
+        bleedIcon.gameObject.SetActive(bleed);
+        wetIcon.gameObject.SetActive(wet);
+        shockIcon.gameObject.SetActive(shock);
+        immobilizeIcon.gameObject.SetActive(immobilize);
+        stunIcon.gameObject.SetActive(stun);
     }
 }

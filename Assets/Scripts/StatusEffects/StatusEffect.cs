@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class StatusEffect : ScriptableObject
 {
     public string name;
     public string description;
+    public Image icon;
     public int damage;
     public int duration;
     protected int timer = 0;

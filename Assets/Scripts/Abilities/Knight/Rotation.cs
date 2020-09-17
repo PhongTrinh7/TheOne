@@ -7,43 +7,41 @@ public class Rotation : Ability
 {
     public int displacement;
 
-    public override void ShowRange(MovingObject caster)
+    public override void ShowRange()
     {
         //Store start position.
         Vector2 start = caster.transform.position;
 
-        // Calculate cast direction based on the direction the unit is facing.
-        Vector2 end = start + caster.facingDirection;
-
-        RaycastHit2D hit;
-
-        caster.CastMaskDetect(end, end, layermask, out hit);
-
-        //Check if anything was hit.
-        if (hit.transform != null)
+        for (int i = -1; i <= 1; i++)
         {
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color32();
+            for (int j = -1; j <= 1; j++)
+            {
+                if (i == 0 && j == 0)
+                {
+
+                }
+                else
+                {
+                    // Calculate cast direction based on the direction the unit is facing.
+                    Vector2 end = start + new Vector2(i, j);
+
+                    RaycastHit2D hit;
+
+                    caster.CastMaskDetectSingle(end, end, layermask, out hit);
+
+                    //Check if anything was hit.
+                    if (hit.transform != null)
+                    {
+                        Debug.Log("highlight");
+                        affectedTiles.Add(hit.transform.gameObject);
+                        hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                    }
+                }
+            }
         }
     }
 
-    public override void HideRange(MovingObject caster)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override bool Cast(MovingObject caster)
-    {
-        if (onCooldown)
-        {
-            return false;
-        }
-
-        caster.TriggerAnimation(animationName, abilitySlot);
-
-        return true;
-    }
-
-    public override void Effect(MovingObject caster)
+    public override void Effect()
     {
         //Store start position.
         Vector2 start = caster.transform.position;
@@ -63,7 +61,7 @@ public class Rotation : Ability
 
                     RaycastHit2D hit;
 
-                    caster.CastHitDetectBlocking(end, end, out hit);
+                    caster.CastHitDetectBlockingSingle(end, end, out hit);
 
                     //Check if anything was hit.
                     if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
@@ -74,8 +72,5 @@ public class Rotation : Ability
                 }
             }
         }
-
-        PlaceOnCooldown();
-        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

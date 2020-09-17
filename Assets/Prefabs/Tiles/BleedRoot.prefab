@@ -129,6 +129,7 @@ MonoBehaviour:
   environmentalHazard:
     serializedVersion: 2
     m_Bits: 512
+  duration: 3
 --- !u!50 &-5959309433726125977
 Rigidbody2D:
   serializedVersion: 4

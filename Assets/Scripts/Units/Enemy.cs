@@ -86,7 +86,11 @@ public class Enemy : MovingObject
         if (path.Count == 0)
         {
             ChangeFacingDirection(target.position - transform.position);
-            CastAbility(0);
+            if (ReadyAbility(0))
+            {
+                yield return new WaitForSeconds(.5f);
+                CastAbility();
+            }
             yield return null;
         }
         else
@@ -103,15 +107,20 @@ public class Enemy : MovingObject
                     yield break;
                 }
 
-                yield return new WaitForSeconds(.2f);
+                //yield return new WaitForSeconds(.1f);
 
                 if (Vector3.Distance(transform.position, target.position) <= 1)
                 {
                     ChangeFacingDirection(target.position - transform.position);
-                    CastAbility(0);
+                    if (ReadyAbility(0))
+                    {
+                        yield return new WaitForSeconds(.5f);
+                        CastAbility();
+                    }
                 }
             }
         }
         state = priorState;
+        target = null;
     }
 }

@@ -150,3 +150,4 @@ MonoBehaviour:
   environmentalHazard:
     serializedVersion: 2
     m_Bits: 512
+  duration: 3
