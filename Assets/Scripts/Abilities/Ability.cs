@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Ability : ScriptableObject
 {
+    protected MovingObject caster;
     public string abilityName;
     public string characterRestriction;
     public int abilitySlot;
@@ -16,10 +17,17 @@ public abstract class Ability : ScriptableObject
     public int cooldown;
     public int range;
     public float cooldownFill;
-    public bool onCooldown = false;
+    public bool onCooldown;
     public LayerMask layermask;
     public Color32 highlightColor;
-    protected List<GameObject> highlightedTiles = new List<GameObject>();
+    public List<GameObject> affectedTiles;
+
+    public virtual void OnEnable()
+    {
+        layermask = 1 << LayerMask.NameToLayer("Floor");
+        highlightColor = new Color32(255, 130, 130, 255);
+        affectedTiles = new List<GameObject>();
+    }
 
     public virtual string Description()
     {
@@ -27,28 +35,66 @@ public abstract class Ability : ScriptableObject
         return summary;
     }
 
-    public abstract void ShowRange(MovingObject caster);
-
-    public virtual void HideRange(MovingObject caster)
+    public virtual void ShowRange()
     {
-        if (highlightedTiles.Count != 0)
+        //Store start position.
+        Vector2 spot = (Vector2) caster.transform.position + caster.facingDirection;
+
+        RaycastHit2D[] hits;
+
+        caster.CastMaskDetectMulti(spot, spot, layermask, out hits);
+
+        foreach (RaycastHit2D hit in hits)
         {
-            foreach (GameObject tile in highlightedTiles)
+            //Check if anything was hit.
+            if (hit.transform != null)
             {
-                tile.GetComponent<SpriteRenderer>().color = Color.white;
+                affectedTiles.Add(hit.transform.gameObject);
+                hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
             }
-            highlightedTiles.Clear();
         }
     }
 
-    public abstract bool Cast(MovingObject caster);
-
-    public virtual void Discharge(MovingObject caster)
+    public virtual void HideRange()
     {
-        caster.TriggerAnimation(animationName, abilitySlot);
+        if (affectedTiles.Count != 0)
+        {
+            foreach (GameObject tile in affectedTiles)
+            {
+                tile.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+            affectedTiles.Clear();
+        }
     }
 
-    public abstract void Effect(MovingObject caster);
+    public virtual bool Ready(MovingObject caster)
+    {
+        if (onCooldown)
+        {
+            return false;
+        }
+
+        this.caster = caster;
+        Debug.Log("ready");
+        ShowRange();
+        return true;
+    }
+
+    public virtual void Cast()
+    {
+        HideRange();
+
+        caster.TriggerAnimation(animationName);
+
+        PlaceOnCooldown();
+    }
+
+    public virtual void Discharge()
+    {
+        caster.TriggerAnimation(animationName);
+    }
+
+    public abstract void Effect();
 
     public virtual void PlaceOnCooldown()
     {

@@ -7,43 +7,38 @@ public class TomatoAttack : Ability
 {
     public Fire fire;
 
-    public override void ShowRange(MovingObject caster)
+    public override void ShowRange()
     {
         //Store start position.
         Vector2 start = caster.transform.position;
 
-        // Calculate cast direction based on the direction the unit is facing.
-        Vector2 end = start + caster.facingDirection;
+        Vector2 dir = caster.facingDirection;
 
-        RaycastHit2D hit;
+        RaycastHit2D[] hitLayerMask;
+        //RaycastHit2D hitBlockingLayer;
 
-        caster.CastMaskDetect(end, end, layermask, out hit);
 
-        //Check if anything was hit.
-        if (hit.transform != null)
+        for (int i = 1; i < range + 1; i++)
         {
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color32();
+            List<Vector3> wave = new List<Vector3>();
+
+            Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
+            Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
+
+            caster.CastMaskDetectMulti(spot1, spot2, layermask, out hitLayerMask);
+
+            foreach (RaycastHit2D hit in hitLayerMask)
+            {
+                if (hit.transform != null)
+                {
+                    affectedTiles.Add(hit.transform.gameObject);
+                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                }
+            }
         }
     }
 
-    public override void HideRange(MovingObject caster)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override bool Cast(MovingObject caster)
-    {
-        caster.TriggerAnimation(animationName, abilitySlot);
-
-        if (onCooldown)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public override void Effect(MovingObject caster)
+    public override void Effect()
     {
         List<List<Vector3>> waves = new List<List<Vector3>>();
 
@@ -52,73 +47,32 @@ public class TomatoAttack : Ability
 
         Vector2 dir = caster.facingDirection;
 
-        //Store start position.
-        Vector2 spot;
-        Vector2 spot2;
-        Vector2 spot3;
-
-        RaycastHit2D hit1;
-        //RaycastHit2D hit2;
-
-        //Check for obstacles in the way.
-        //caster.CastHitDetectBlocking(end, end, out hit1);
-
-        //Check if there is already an environmental hazard in that spot.
-        //caster.CastMaskDetect(end, end, bleedRoot.environmentalHazard, out hit2);
+        RaycastHit2D[] hitLayerMask;
 
         for (int i = 1; i < range + 1; i++)
         {
             List<Vector3> wave = new List<Vector3>();
 
-            spot = start + dir * i;
+            Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
+            Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
 
-            caster.CastHitDetectBlocking(spot, spot, out hit1);
+            caster.CastMaskDetectMulti(spot1, spot2, layermask, out hitLayerMask);
 
-            //Check if there is already an environmental hazard in that spot.
-            //caster.CastMaskDetect(spot, spot, fire.environmentalHazard, out hit2);
-
-            if (hit1.transform != null && hit1.transform.gameObject.CompareTag("Wall"))
+            foreach (RaycastHit2D hit in hitLayerMask)
             {
+                Vector2 spot = hit.transform.position;
 
-            }
-            else
-            {
-                wave.Add(spot);
-            }
+                RaycastHit2D hitBL;
+                caster.CastHitDetectBlockingSingle(spot, spot, out hitBL);
 
-            //spot 2
-            spot2 = spot + Vector2.Perpendicular(dir);
-
-            caster.CastHitDetectBlocking(spot2, spot2, out hit1);
-
-            if (hit1.transform != null && hit1.transform.gameObject.CompareTag("Wall"))
-            {
-
-            }
-            else
-            {
-                wave.Add(spot2);
-            }
-
-            //spot 3
-            spot3 = spot - Vector2.Perpendicular(dir);
-
-            caster.CastHitDetectBlocking(spot3, spot3, out hit1);
-
-            if (hit1.transform != null && hit1.transform.gameObject.CompareTag("Wall"))
-            {
-
-            }
-            else
-            {
-                wave.Add(spot3);
+                if (hitBL.transform == null || !hitBL.transform.gameObject.CompareTag("Wall"))
+                {
+                    wave.Add(hit.transform.position);
+                }
             }
             waves.Add(wave);
         }
 
         caster.PlaceHazardWave(fire, waves, 0.2f);
-
-        PlaceOnCooldown();
-        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }

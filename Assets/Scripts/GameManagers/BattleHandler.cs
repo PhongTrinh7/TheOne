@@ -13,6 +13,7 @@ public class BattleHandler : Manager<BattleHandler>
 
     //Handles turns.
     public int currentTurn = 0;
+    private int roundCounter;
     public float turnDelay = .7f;
     public MovingObject activeUnit;
     public Queue<MovingObject> currentUnits;
@@ -51,6 +52,7 @@ public class BattleHandler : Manager<BattleHandler>
             currentUnits.Enqueue(unit);
         }
 
+        roundCounter = currentUnits.Count;
         activeUnit = currentUnits.Peek();
         activeUnit.StartTurn();
 
@@ -84,9 +86,26 @@ public class BattleHandler : Manager<BattleHandler>
                     StartCoroutine(AdvanceTurn());
                 }
 
-                if (Input.GetKeyDown("space"))
+
+                if (activeUnit.state == MovingObject.UnitState.READYUP)
+                {                
+                    //Ability ready.
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        activeUnit.CastAbility();
+                    }
+                    //Cancel ability ready.
+                    else if (Input.GetMouseButtonDown(1))
+                    {
+                        activeUnit.CancelAbility();
+                    }
+                }
+                else
                 {
-                    StartCoroutine(AdvanceTurn());
+                    if (Input.GetKeyDown("space"))
+                    {
+                        StartCoroutine(AdvanceTurn());
+                    }
                 }
             }
 
@@ -166,6 +185,13 @@ public class BattleHandler : Manager<BattleHandler>
         controlLocked = true;
         activeUnit.EndTurn();
 
+        roundCounter--;
+        if (roundCounter <= 0)
+        {
+            UpdateEnvironmentalHazards();
+            roundCounter = currentUnits.Count;
+        }
+
         //Let effects run their course before setting enemy loose.
         yield return new WaitForSeconds(turnDelay);
 
@@ -213,22 +239,22 @@ public class BattleHandler : Manager<BattleHandler>
 
     public void Ability1()
     {
-        activeUnit.CastAbility(0);
+        activeUnit.ReadyAbility(0);
     }
 
     public void Ability2()
     {
-        activeUnit.CastAbility(1);
+        activeUnit.ReadyAbility(1);
     }
 
     public void Ability3()
     {
-        activeUnit.CastAbility(2);
+        activeUnit.ReadyAbility(2);
     }
 
     public void Ability4()
     {
-        activeUnit.CastAbility(3);
+        activeUnit.ReadyAbility(3);
     }
 
     //Send them to the shadow realms.
@@ -236,5 +262,16 @@ public class BattleHandler : Manager<BattleHandler>
     {
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);
         unit.Death();
+    }
+
+    public void UpdateEnvironmentalHazards()
+    {
+        foreach (EnvironmentalHazard hazard in FindObjectsOfType(typeof(EnvironmentalHazard)) as EnvironmentalHazard[])
+        {
+            if (hazard.gameObject.layer == 9)
+            {
+                hazard.DurationCountDown();
+            }
+        }
     }
 }

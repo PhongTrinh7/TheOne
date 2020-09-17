@@ -7,74 +7,41 @@ public class ChargedAttack : Ability
 {
     public string dischargeAnimationName;
 
-    public override void ShowRange(MovingObject caster)
+    public override void Cast()
     {
-        //Store start position.
-        Vector2 start = caster.transform.position;
-
-        // Calculate cast direction based on the direction the unit is facing.
-        Vector2 end = start + caster.facingDirection;
-
-        RaycastHit2D hit;
-
-        caster.CastMaskDetect(end, end, layermask, out hit);
-
-        //Check if anything was hit.
-        if (hit.transform != null)
-        {
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color32();
-        }
-    }
-
-    public override void HideRange(MovingObject caster)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override bool Cast(MovingObject caster)
-    {
-        if (onCooldown)
-        {
-            return false;
-        }
-
-        damage = caster.energy;
+        damage = caster.energy * 2;
         caster.energy = 0;
-        caster.Charge(abilitySlot);
-
-        return true;
+        caster.Charge();
     }
 
-    public override void Discharge(MovingObject caster)
+    public override void Discharge()
     {
-        damage += caster.energy;
+        HideRange();
+        damage += caster.energy * 2;
         caster.energy = 0;
-        caster.TriggerAnimation(animationName, abilitySlot);
-    }
-
-    public override void Effect(MovingObject caster)
-    {
-        //Store start position.
-        Vector2 start = caster.transform.position;
-
-        // Calculate cast direction based on the direction the unit is facing.
-        Vector2 end = start + caster.facingDirection;
-
-        RaycastHit2D hit;
-
-        caster.CastHitDetectBlocking(end, end, out hit);
-
-        //Check if anything was hit.
-        if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
-        {
-            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
-        }
-
-        else
-        {
-            Debug.Log("nothing was hit");
-        }
-
+        caster.TriggerAnimation(animationName);
         PlaceOnCooldown();
+    }
+
+    public override void Effect()
+    {
+        //Store start position.
+        Vector2 start = caster.transform.position;
+
+        // Calculate cast direction based on the direction the unit is facing.
+        Vector2 end = start + caster.facingDirection;
+
+        RaycastHit2D[] hits;
+
+        caster.CastHitDetectBlockingMulti(end, end, out hits);
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            //Check if anything was hit.
+            if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
+            {
+                hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
+            }
+        }
     }
 }

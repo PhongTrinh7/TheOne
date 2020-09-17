@@ -7,7 +7,49 @@ public class Dash : Ability
 {
     public int distance;
 
-    public override void ShowRange(MovingObject caster)
+    public override void ShowRange()
+    {
+        //Store start position.
+        Vector2 start = (Vector2) caster.transform.position + caster.facingDirection;
+
+        // Calculate cast direction based on the direction the unit is facing.
+        Vector2 end = start + caster.facingDirection * (distance - 1);
+
+        RaycastHit2D[] hits;
+
+        caster.CastMaskDetectMulti(start, end, layermask, out hits);
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            //Check if anything was hit.
+            if (hit.transform != null)
+            {
+                affectedTiles.Add(hit.transform.gameObject);
+                hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+            }
+
+            Vector2 spot = hit.transform.position;
+
+            RaycastHit2D hitBL;
+            caster.CastHitDetectBlockingSingle(spot, spot, out hitBL);
+
+            if (hitBL.transform != null)
+            {
+                break;
+            }
+        }
+    }
+
+    public override void Cast()
+    {
+        HideRange();
+
+        caster.Dash(caster.facingDirection, distance, damage);
+
+        PlaceOnCooldown();
+    }
+
+    public override void Effect()
     {
         //Store start position.
         Vector2 start = caster.transform.position;
@@ -15,37 +57,17 @@ public class Dash : Ability
         // Calculate cast direction based on the direction the unit is facing.
         Vector2 end = start + caster.facingDirection;
 
-        RaycastHit2D hit;
+        RaycastHit2D[] hits;
 
-        caster.CastMaskDetect(end, end, layermask, out hit);
+        caster.CastHitDetectBlockingMulti(end, end, out hits);
 
-        //Check if anything was hit.
-        if (hit.transform != null)
+        foreach (RaycastHit2D hit in hits)
         {
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color32();
+            //Check if anything was hit.
+            if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
+            {
+                hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
+            }
         }
-    }
-
-    public override void HideRange(MovingObject caster)
-    {
-        throw new System.NotImplementedException();
-
-    }
-    public override bool Cast(MovingObject caster)
-    {
-        if (onCooldown)
-        {
-            return false;
-        }
-
-        caster.Dash(caster.facingDirection, distance, damage);
-        PlaceOnCooldown();
-
-        return true;
-    }
-
-    public override void Effect(MovingObject caster)
-    {
-        PlaceOnCooldown();
     }
 }

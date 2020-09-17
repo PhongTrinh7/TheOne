@@ -5,7 +5,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Heal")]
 public class Heal : Ability
 {
-    public override void ShowRange(MovingObject caster)
+    public override void OnEnable()
+    {
+        layermask = 1 << LayerMask.NameToLayer("Floor");
+        highlightColor = new Color32(130, 255, 130, 255);
+        affectedTiles = new List<GameObject>();
+    }
+
+    public override void Effect()
     {
         //Store start position.
         Vector2 start = caster.transform.position;
@@ -13,57 +20,17 @@ public class Heal : Ability
         // Calculate cast direction based on the direction the unit is facing.
         Vector2 end = start + caster.facingDirection;
 
-        RaycastHit2D hit;
+        RaycastHit2D[] hits;
 
-        caster.CastMaskDetect(end, end, layermask, out hit);
+        caster.CastHitDetectBlockingMulti(end, end, out hits);
 
-        //Check if anything was hit.
-        if (hit.transform != null)
+        foreach (RaycastHit2D hit in hits)
         {
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = new Color32();
+            //Check if anything was hit.
+            if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
+            {
+                hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(-damage);
+            }
         }
-    }
-
-    public override void HideRange(MovingObject caster)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override bool Cast(MovingObject caster)
-    {
-        if (onCooldown)
-        {
-            return false;
-        }
-
-        caster.TriggerAnimation(animationName, abilitySlot);
-
-        return true;
-    }
-
-    public override void Effect(MovingObject caster)
-    {
-        //Store start position.
-        Vector2 start = caster.transform.position;
-
-        // Calculate cast direction based on the direction the unit is facing.
-        Vector2 end = start + caster.facingDirection;
-
-        RaycastHit2D hit;
-
-        caster.CastHitDetectBlocking(end, end, out hit);
-
-        //Check if anything was hit.
-        if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
-        {
-            hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(-damage);
-        }
-        else
-        {
-            Debug.Log("nothing was hit");
-        }
-
-        PlaceOnCooldown();
-        //UIManager.Instance.UpdateActiveUnitAbilities(caster);
     }
 }
