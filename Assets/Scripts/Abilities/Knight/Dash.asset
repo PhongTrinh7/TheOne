@@ -22,7 +22,7 @@ MonoBehaviour:
   cost: 3
   initialCooldown: 3
   cooldown: 0
-  range: 0
+  range: 5
   cooldownFill: 1
   onCooldown: 0
   layermask:

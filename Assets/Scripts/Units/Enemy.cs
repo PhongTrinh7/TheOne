@@ -26,13 +26,12 @@ public class Enemy : MovingObject
 
     public IEnumerator EnemyMove(int rows, int columns, List<Vector3> currentUnwalkables)
     {
-        UnitState priorState = state;
-        state = UnitState.BUSY;
-
         if (dead || stun) {
-            state = priorState;
             yield break;
         }
+
+        UnitState priorState = state;
+        state = UnitState.BUSY;
 
         targets = GameObject.FindGameObjectsWithTag("Player");
 
@@ -103,7 +102,7 @@ public class Enemy : MovingObject
 
                 if (health <= 0 || stun)
                 {
-                    state = priorState;
+                    state = UnitState.BUSY;
                     yield break;
                 }
 
@@ -120,7 +119,10 @@ public class Enemy : MovingObject
                 }
             }
         }
-        state = priorState;
-        target = null;
+        if (state != UnitState.CHARGING)
+        {
+            state = priorState;
+            target = null;
+        }
     }
 }

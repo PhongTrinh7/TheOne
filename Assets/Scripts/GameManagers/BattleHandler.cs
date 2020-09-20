@@ -23,6 +23,10 @@ public class BattleHandler : Manager<BattleHandler>
     public Transform target;
     public List<Vector3> currentUnwalkables;
 
+    //Camera.
+    public CameraController cameraController;
+
+    //Lock.
     public bool controlLocked;
 
     void Start()
@@ -55,6 +59,7 @@ public class BattleHandler : Manager<BattleHandler>
         roundCounter = currentUnits.Count;
         activeUnit = currentUnits.Peek();
         activeUnit.StartTurn();
+        cameraController.CameraLookAt(activeUnit);
 
         UIManager.Instance.SetUpTurnOrderPortraits(currentUnits);
     }
@@ -118,24 +123,47 @@ public class BattleHandler : Manager<BattleHandler>
                     UIManager.Instance.SetSkillsInteractable();
                 }
 
-                //Keyboard Input
-                if (Input.GetKeyDown("w"))
+                if (Input.GetKey("left shift"))
                 {
-                    StartCoroutine(activeUnit.Move(0, 1));
+                    //Keyboard Input
+                    if (Input.GetKeyDown("w"))
+                    {
+                        activeUnit.ChangeFacingDirection(new Vector2(0, 1));
+                    }
+                    else if (Input.GetKeyDown("a"))
+                    {
+                        activeUnit.ChangeFacingDirection(new Vector2(-1, 0));
+                    }
+                    else if (Input.GetKeyDown("s"))
+                    {
+                        activeUnit.ChangeFacingDirection(new Vector2(0, -1));
+                    }
+                    else if (Input.GetKeyDown("d"))
+                    {
+                        activeUnit.ChangeFacingDirection(new Vector2(1, 0));
+                    }
                 }
-                else if (Input.GetKeyDown("a"))
-                {
-                    StartCoroutine(activeUnit.Move(-1, 0));
+                else {
+                    //Keyboard Input
+                    if (Input.GetKey("w"))
+                    {
+                        StartCoroutine(activeUnit.Move(0, 1));
+                    }
+                    else if (Input.GetKey("a"))
+                    {
+                        StartCoroutine(activeUnit.Move(-1, 0));
+                    }
+                    else if (Input.GetKey("s"))
+                    {
+                        StartCoroutine(activeUnit.Move(0, -1));
+                    }
+                    else if (Input.GetKey("d"))
+                    {
+                        StartCoroutine(activeUnit.Move(1, 0));
+                    }
                 }
-                else if (Input.GetKeyDown("s"))
-                {
-                    StartCoroutine(activeUnit.Move(0, -1));
-                }
-                else if (Input.GetKeyDown("d"))
-                {
-                    StartCoroutine(activeUnit.Move(1, 0));
-                }
-                else if (Input.GetKeyDown("1"))
+
+                if (Input.GetKeyDown("1"))
                 {
                     Ability1();
                 }
@@ -213,6 +241,10 @@ public class BattleHandler : Manager<BattleHandler>
         }
 
         activeUnit.StartTurn();
+
+        cameraController.CameraLookAt(activeUnit);
+        //cameraController.newPosition.x = activeUnit.transform.position.x;
+        //cameraController.newPosition.y = activeUnit.transform.position.y;
 
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);
 

@@ -132,16 +132,6 @@ public class UIManager : Manager<UIManager>
 
     }
 
-    public void HealthBarMaxValue(int health)
-    {
-        healthBar.SetMaxHealth(health);
-    }
-
-    public void HealthBarCurrentValue(int health)
-    {
-        healthBar.SetCurrentHealth(health);
-    }
-
     public void SetUpTurnOrderPortraits(Queue<MovingObject> currentUnits)
     {
         turnOrderPortraits = new List<Image>();
@@ -151,7 +141,8 @@ public class UIManager : Manager<UIManager>
             turnOrderPortraits.Add(Instantiate(unit.portrait, turnOrderPanel.transform));
         }
 
-        turnOrderPortraits[0].rectTransform.sizeDelta = new Vector2(72, 72);
+        //turnOrderPortraits[0].rectTransform.sizeDelta = new Vector2(72, 72);
+        turnOrderPortraits[0].rectTransform.localScale = new Vector2(1.5f, 1.5f);
     }
 
     public void UpdateTurnOrderPortraits(Queue<MovingObject> currentUnits)
@@ -168,6 +159,7 @@ public class UIManager : Manager<UIManager>
             turnOrderPortraits.Add(Instantiate(unit.portrait, turnOrderPanel.transform));
         }
 
-        turnOrderPortraits[0].rectTransform.sizeDelta = new Vector2(72, 72);
+        //turnOrderPortraits[0].rectTransform.sizeDelta = new Vector2(72, 72);
+        turnOrderPortraits[0].rectTransform.localScale = new Vector2(1.5f, 1.5f);
     }
 }

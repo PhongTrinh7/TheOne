@@ -1,0 +1,106 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraController : MonoBehaviour
+{
+    public float movementSpeed;
+    public float movementTime;
+    public float xCamBound;
+    public float yCamBound;
+    public Vector3 zoomAmount;
+    public float zoomMin;
+    public float zoomMax;
+
+    public Camera mainCam;
+    public bool cameraLocked;
+    public MovingObject target;
+
+    public Vector3 newZoom;
+    public Vector3 newPosition;
+    public Vector3 dragStart;
+    public Vector3 dragCurrent;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        newPosition.z = transform.position.z;
+
+        Board board = (Board) FindObjectOfType(typeof(Board));
+        xCamBound = board.columns + 1;
+        yCamBound = board.rows;
+
+        Debug.Log("Hi");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        HandleCameraMovement();
+        if (cameraLocked)
+        {
+            CameraLock();
+        }
+    }
+
+    void HandleCameraMovement()
+    {
+        if (Input.mouseScrollDelta.y != 0)
+        {
+            newZoom += Input.mouseScrollDelta.y * zoomAmount;
+            newZoom.z = Mathf.Clamp(newZoom.z, zoomMin, zoomMax);
+        }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            Debug.Log("click");
+            cameraLocked = false;
+
+            Plane plane = new Plane(Vector3.forward, Vector3.zero);
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            float entry;
+
+            if (plane.Raycast(ray, out entry))
+            {
+                dragStart = ray.GetPoint(entry);
+            }
+        }
+
+        if (Input.GetMouseButton(2))
+        {
+            Plane plane = new Plane(Vector3.forward, Vector3.zero);
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            float entry;
+
+            if(plane.Raycast(ray, out entry))
+            {
+                dragCurrent = ray.GetPoint(entry);
+
+                newPosition = transform.position + dragStart - dragCurrent;
+                newPosition.x = Mathf.Clamp(newPosition.x, 0, xCamBound);
+                newPosition.y = Mathf.Clamp(newPosition.y, 0, yCamBound);
+            }
+        }
+
+        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
+        mainCam.transform.localPosition = Vector3.Lerp(mainCam.transform.localPosition, newZoom, Time.deltaTime * movementTime);
+    }
+
+    public void CameraLookAt(MovingObject target)
+    {
+        cameraLocked = true;
+        this.target = target;
+        newPosition.x = Mathf.Clamp(target.transform.position.x, 0, xCamBound);
+        newPosition.y = Mathf.Clamp(target.transform.position.y, 0, yCamBound);
+    }
+
+    public void CameraLock()
+    {
+        newPosition.x = Mathf.Clamp(target.transform.position.x, 0, xCamBound);
+        newPosition.y = Mathf.Clamp(target.transform.position.y, 0, yCamBound);
+    }
+}

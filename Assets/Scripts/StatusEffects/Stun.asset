@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stun
   m_EditorClassIdentifier: 
   name: stun
-  description: 
+  description: stunned, duh!
   icon: {fileID: 0}
   damage: 0
   duration: 1

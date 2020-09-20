@@ -58,6 +58,8 @@ MonoBehaviour:
   - {fileID: 624173366221980061, guid: 04e05044eee79bc4eadbc7432fa7bc2a, type: 3}
   unwalkables: []
   players:
+  - {fileID: 1955431953928455646, guid: 4111ef8bc36d0bd40879b7c06987f17e, type: 3}
   - {fileID: 1899455175842422477, guid: 2baadd4cd5319f64e8355eb112f2fa85, type: 3}
-  enemies: []
+  enemies:
+  - {fileID: 8792999962680736340, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
   units: []

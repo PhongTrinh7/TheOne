@@ -40,6 +40,7 @@ public abstract class MovingObject : MonoBehaviour
     public DamageNumber damageNumber;
 
     //Unit stats.
+    public int maxHealth;
     public int health;
     public int speed;
     public int energy;
@@ -50,7 +51,7 @@ public abstract class MovingObject : MonoBehaviour
     //Unit Abilities.
     public List<Ability> abilitiesReference;
     public List<Ability> abilities;
-    public bool charging = false;
+    public bool charging;
     public int loadedAbility;
 
     //Status effects.
@@ -85,6 +86,8 @@ public abstract class MovingObject : MonoBehaviour
     protected virtual void Awake()
     {
         moveSpeed = 3f;
+
+        health = maxHealth;
 
         //Collision detection.
         boxCollider = GetComponent<BoxCollider2D>(); // for collision
@@ -135,16 +138,18 @@ public abstract class MovingObject : MonoBehaviour
         state = UnitState.BUSY;
 
         Vector2 newFacingDirection = new Vector2(xDir, yDir);
+        ChangeFacingDirection(newFacingDirection);
 
         //Change direction instead of move if facing direction is not the same as move direction.
-        if (newFacingDirection != facingDirection)
+        /*if (newFacingDirection != facingDirection)
         {
             //Change facing direction.
             ChangeFacingDirection(newFacingDirection);
 
             yield return null;
-        }
-        else if (energy >= moveCost)
+        }*/
+
+        if (energy >= moveCost)
         {
             //Store start position to move from, based on objects current transform position.
             Vector2 start = transform.position;
@@ -184,7 +189,7 @@ public abstract class MovingObject : MonoBehaviour
         }
     }
 
-    protected void ChangeFacingDirection(Vector2 direction)
+    public void ChangeFacingDirection(Vector2 direction)
     {
         //Sets facing direction.
         facingDirection = direction;
@@ -396,14 +401,15 @@ public abstract class MovingObject : MonoBehaviour
 
         if (!dead && health <= 0)
         {
-            health = 0;
             dead = true;
+            return;
         }
         else if (dead && health > 0)
         {
             dead = false;
         }
 
+        health = Mathf.Clamp(health, 0, maxHealth);
         healthBar.SetCurrentHealth(health);
     }
 
@@ -460,17 +466,15 @@ public abstract class MovingObject : MonoBehaviour
         Debug.Log(this + " starts turn.");
         isTurn = true;
         turnIndicator.SetActive(isTurn);
-        energy += energyRegen;
-        if (energy > 12)
-        {
-            energy = 12;
-        }
+        //energy += energyRegen;
+        energy = Mathf.Clamp(energy + energyRegen, 0, 12);
         ApplyEffects();
         HandleCooldowns();
 
         if (stun)
         {
             Debug.Log("stunned!");
+            EndTurn();
         }
         else if (charging)
         {

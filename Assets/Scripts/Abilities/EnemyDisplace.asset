@@ -22,7 +22,14 @@ MonoBehaviour:
   cost: 2
   initialCooldown: 1
   cooldown: 0
-  range: 0
+  range: 1
   cooldownFill: 1
   onCooldown: 0
+  layermask:
+    serializedVersion: 2
+    m_Bits: 1024
+  highlightColor:
+    serializedVersion: 2
+    rgba: 4286743295
+  affectedTiles: []
   displacement: 2
