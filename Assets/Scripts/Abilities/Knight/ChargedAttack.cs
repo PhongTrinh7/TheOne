@@ -6,10 +6,23 @@ using UnityEngine;
 public class ChargedAttack : Ability
 {
     public string dischargeAnimationName;
+    private int totalDamage;
 
-    public override void Cast()
+    public override bool Ready(MovingObject caster)
     {
         damage = caster.energy * 2;
+        totalDamage = damage;
+        return base.Ready(caster);
+    }
+
+    public override void HideRange()
+    {
+        damage = 0;
+        base.HideRange();
+    }
+    public override void Cast()
+    {
+        damage = caster.energy * 2 + 2;
         caster.energy = 0;
         caster.Charge();
     }
@@ -17,7 +30,7 @@ public class ChargedAttack : Ability
     public override void Discharge()
     {
         HideRange();
-        damage += caster.energy * 2;
+        totalDamage += caster.energy * 2 + 2;
         caster.energy = 0;
         caster.TriggerAnimation(animationName);
         PlaceOnCooldown();
@@ -40,7 +53,7 @@ public class ChargedAttack : Ability
             //Check if anything was hit.
             if (hit.transform != null && !hit.transform.gameObject.CompareTag("Wall"))
             {
-                hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
+                hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(totalDamage);
             }
         }
     }

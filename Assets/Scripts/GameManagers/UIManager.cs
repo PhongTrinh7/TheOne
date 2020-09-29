@@ -60,6 +60,7 @@ public class UIManager : Manager<UIManager>
             b1.interactable = true;
         }
         b1.GetComponent<Image>().fillAmount = activeUnit.abilities[0].cooldownFill;
+        //b1.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[0]);
 
         if (activeUnit.abilities[1].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[1].cost)
         {
@@ -70,6 +71,7 @@ public class UIManager : Manager<UIManager>
             b2.interactable = true;
         }
         b2.GetComponent<Image>().fillAmount = activeUnit.abilities[1].cooldownFill;
+        //b2.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[1]);
 
         if (activeUnit.abilities[2].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[2].cost)
         {
@@ -80,6 +82,7 @@ public class UIManager : Manager<UIManager>
             b3.interactable = true;
         }
         b3.GetComponent<Image>().fillAmount = activeUnit.abilities[2].cooldownFill;
+        //b3.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[2]);
 
         if (activeUnit.abilities[3].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[3].cost)
         {
@@ -90,26 +93,35 @@ public class UIManager : Manager<UIManager>
             b4.interactable = true;
         }
         b4.GetComponent<Image>().fillAmount = activeUnit.abilities[3].cooldownFill;
+        //b4.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[3]);
     }
 
     public void Tooltip0()
     {
-        b1.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[0].Description());
+        b1.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[0]);
     }
 
     public void Tooltip1()
     {
-        b2.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[1].Description());
+        b2.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[1]);
     }
 
     public void Tooltip2()
     {
-        b3.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[2].Description());
+        b3.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[2]);
     }
 
     public void Tooltip3()
     {
-        b4.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[3].Description());
+        b4.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[3]);
+    }
+
+    public void HideTooltips()
+    {
+        b1.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
+        b2.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
+        b3.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
+        b4.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
     }
 
     public void SetSkillsUninteractable()

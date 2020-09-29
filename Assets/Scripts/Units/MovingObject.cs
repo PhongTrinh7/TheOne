@@ -67,6 +67,7 @@ public abstract class MovingObject : MonoBehaviour
     public Image immobilizeIcon;
     public bool stun;
     public Image stunIcon;
+    public bool skipTurn;
 
     //Movement
     public float moveSpeed;
@@ -101,7 +102,7 @@ public abstract class MovingObject : MonoBehaviour
 
         //Get reference to energy bar.
         energyBar = transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<EnergyBar>();
-        energy = 0;
+        energy = speed;
         energyRegen = speed;
         energyBar.SetMaxEnergy(12);
 
@@ -191,6 +192,10 @@ public abstract class MovingObject : MonoBehaviour
 
     public void ChangeFacingDirection(Vector2 direction)
     {
+        if (stun)
+        {
+            return;
+        }
         //Sets facing direction.
         facingDirection = direction;
         anim.SetFloat("Horizontal", direction.x);
@@ -344,7 +349,6 @@ public abstract class MovingObject : MonoBehaviour
             if (hit.transform.gameObject.CompareTag("Enemy") || hit.transform.gameObject.CompareTag("Player"))
             {
                 abilities[loadedAbility].Effect();
-                //hit.transform.gameObject.GetComponent<MovingObject>().TakeDamage(damage);
             }
         }
 
@@ -399,6 +403,9 @@ public abstract class MovingObject : MonoBehaviour
             Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, false);
         }
 
+        health = Mathf.Clamp(health, 0, maxHealth);
+        healthBar.SetCurrentHealth(health);
+
         if (!dead && health <= 0)
         {
             dead = true;
@@ -408,9 +415,6 @@ public abstract class MovingObject : MonoBehaviour
         {
             dead = false;
         }
-
-        health = Mathf.Clamp(health, 0, maxHealth);
-        healthBar.SetCurrentHealth(health);
     }
 
     public void CastMaskDetectSingle(Vector2 start, Vector2 end, LayerMask layerMask, out RaycastHit2D hit)
@@ -470,10 +474,9 @@ public abstract class MovingObject : MonoBehaviour
         ApplyEffects();
         HandleCooldowns();
 
-        if (stun)
+        if (skipTurn)
         {
-            Debug.Log("stunned!");
-            EndTurn();
+            charging = false;
         }
         else if (charging)
         {
@@ -493,7 +496,7 @@ public abstract class MovingObject : MonoBehaviour
         }
         isTurn = false;
         turnIndicator.SetActive(isTurn);
-        Debug.Log("Ending Turn");
+        skipTurn = false;
     }
 
     public void Death()
@@ -509,10 +512,27 @@ public abstract class MovingObject : MonoBehaviour
     {
         energyBar.SetCurrentEnergy(energy);
 
+        if (dead)
+        {
+            bleed = false;
+            wet = false;
+            shock = false;
+            immobilize = false;
+            stun = false;
+        }
+
         bleedIcon.gameObject.SetActive(bleed);
         wetIcon.gameObject.SetActive(wet);
         shockIcon.gameObject.SetActive(shock);
         immobilizeIcon.gameObject.SetActive(immobilize);
         stunIcon.gameObject.SetActive(stun);
+
+        if (stun)
+        {
+            state = UnitState.IDLE;
+            charging = false;
+            anim.SetBool("Charging", false);
+            abilities[loadedAbility].HideRange();
+        }
     }
 }

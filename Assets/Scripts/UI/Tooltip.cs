@@ -7,6 +7,7 @@ public class Tooltip : MonoBehaviour
 {
     private RectTransform background;
     private Text tooltipText;
+    private Ability ability;
 
     void Awake()
     {
@@ -14,11 +15,11 @@ public class Tooltip : MonoBehaviour
         tooltipText = transform.Find("Text").GetComponent<Text>();
     }
 
-    public void ShowTooltip(string tooltipString)
+    public void ShowTooltip(Ability ability)
     {
         gameObject.SetActive(true);
-
-        tooltipText.text = tooltipString;
+        this.ability = ability;
+        tooltipText.text = ability.Description();
         float padding = 8f;
         Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + padding, tooltipText.preferredHeight + padding);
         background.sizeDelta = backgroundSize;
@@ -27,5 +28,16 @@ public class Tooltip : MonoBehaviour
     public void HideTooltip()
     {
         gameObject.SetActive(false);
+    }
+
+    public void Update()
+    {
+        if (isActiveAndEnabled)
+        {
+            tooltipText.text = ability.Description();
+            float padding = 8f;
+            Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + padding, tooltipText.preferredHeight + padding);
+            background.sizeDelta = backgroundSize;
+        }
     }
 }

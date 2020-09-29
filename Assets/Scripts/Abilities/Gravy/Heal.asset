@@ -18,7 +18,7 @@ MonoBehaviour:
   animationName: Attack
   description: Heal unit.
   initialDamage: 0
-  damage: 20
+  damage: 10
   cost: 2
   initialCooldown: 2
   cooldown: 0
@@ -32,5 +32,5 @@ MonoBehaviour:
     m_Bits: 1024
   highlightColor:
     serializedVersion: 2
-    rgba: 1845559040
+    rgba: 1006698240
   affectedTiles: []

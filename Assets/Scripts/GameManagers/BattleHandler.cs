@@ -60,7 +60,7 @@ public class BattleHandler : Manager<BattleHandler>
         roundCounter = currentUnits.Count;
         activeUnit = currentUnits.Peek();
         activeUnit.StartTurn();
-        //cameraController.CameraLookAt(activeUnit);
+        cameraController.CameraLookAt(activeUnit);
 
         UIManager.Instance.SetUpTurnOrderPortraits(currentUnits);
     }
@@ -215,6 +215,9 @@ public class BattleHandler : Manager<BattleHandler>
     IEnumerator AdvanceTurn()
     {
         controlLocked = true;
+
+        UIManager.Instance.HideTooltips();
+
         activeUnit.EndTurn();
 
         roundCounter--;
@@ -260,6 +263,12 @@ public class BattleHandler : Manager<BattleHandler>
         else
         {
             UIManager.Instance.UpdateActiveUnitAbilities(activeUnit);
+            if (activeUnit.skipTurn)
+            {
+                activeUnit.EndTurn();
+                yield return new WaitForSeconds(turnDelay);
+                StartCoroutine(AdvanceTurn());
+            }
         }
 
         controlLocked = false;

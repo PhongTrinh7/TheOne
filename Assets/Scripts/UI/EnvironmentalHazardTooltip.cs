@@ -20,9 +20,7 @@ public class EnvironmentalHazardTooltip : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        Debug.Log("tooltip on!");
-
-        tooltipText.text = hazard.localName + "\n" + hazard.description;
+        tooltipText.text = hazard.localName + "\n" + hazard.description + "\nDuration: " + hazard.duration;
         float padding = 0f;
         Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + padding, tooltipText.preferredHeight + padding);
         background.sizeDelta = backgroundSize;

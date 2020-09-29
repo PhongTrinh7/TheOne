@@ -31,7 +31,7 @@ public class Stun : StatusEffect
 
     public override void Effect()
     {
-        Debug.Log("stunned!");
+        target.skipTurn = true;
         timer++;
     }
 

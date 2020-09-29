@@ -26,7 +26,7 @@ public class Enemy : MovingObject
 
     public IEnumerator EnemyMove(int rows, int columns, List<Vector3> currentUnwalkables)
     {
-        if (dead || stun || energy < 1) {
+        if (dead || skipTurn || energy < 1) {
             yield break;
         }
 
@@ -76,7 +76,7 @@ public class Enemy : MovingObject
             currentUnwalkables.Add(t.transform.position);
         }
 
-        if (path == null)
+        if (path == null || target == null)
         {
             Debug.Log("No possible routes to targets!");
             yield break;
