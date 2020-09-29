@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class EnvironmentalHazard : MonoBehaviour
 {
+    public string localName;
+    public string description;
     public int damage;
     public List<StatusEffect> effects;
     public LayerMask environmentalHazard;

@@ -16,13 +16,22 @@ MonoBehaviour:
   characterRestriction: 
   abilitySlot: 3
   animationName: Attack
-  description: Lay down Fire hazards.
+  description: Lay down tomatoes.
   initialDamage: 0
   damage: 0
   cost: 3
-  initialCooldown: 3
+  initialCooldown: 4
   cooldown: 0
   range: 2
   cooldownFill: 1
   onCooldown: 0
+  highlight: {fileID: 4258002896530323566, guid: 526a83ebaa88c09459454e992540d305,
+    type: 3}
+  layermask:
+    serializedVersion: 2
+    m_Bits: 1024
+  highlightColor:
+    serializedVersion: 2
+    rgba: 1006633215
+  affectedTiles: []
   fire: {fileID: 3404593042432373016, guid: 4cafbe1171c327749b66c2fc29cdf651, type: 3}

@@ -29,11 +29,9 @@ public class BloodyBlossom : Ability
 
             foreach (RaycastHit2D hit in hitLayerMask)
             {
-                if (hit.transform != null)
-                {
-                    affectedTiles.Add(hit.transform.gameObject);
-                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
-                }
+                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                affectedTiles.Add(ht);
             }
         }
     }

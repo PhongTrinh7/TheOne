@@ -8,7 +8,7 @@ public class Heal : Ability
     public override void OnEnable()
     {
         layermask = 1 << LayerMask.NameToLayer("Floor");
-        highlightColor = new Color32(130, 255, 130, 255);
+        highlightColor = new Color32(0, 255, 0, 60);
         affectedTiles = new List<GameObject>();
     }
 

@@ -106,7 +106,7 @@ public abstract class MovingObject : MonoBehaviour
         energyBar.SetMaxEnergy(12);
 
         //Get reference to the turn indicator.
-        turnIndicator = transform.GetChild(0).transform.GetChild(2).gameObject;
+        //turnIndicator = transform.GetChild(0).transform.GetChild(2).gameObject;
         turnIndicator.SetActive(false);
 
         //Get reference to the status effect container and status effects.
@@ -440,7 +440,6 @@ public abstract class MovingObject : MonoBehaviour
     //Status handling.
     public void ApplyStatus(StatusEffect status)
     {
-        statuses.Add(status);
         status.OnApply(this);
     }
 
@@ -466,8 +465,8 @@ public abstract class MovingObject : MonoBehaviour
         Debug.Log(this + " starts turn.");
         isTurn = true;
         turnIndicator.SetActive(isTurn);
-        //energy += energyRegen;
         energy = Mathf.Clamp(energy + energyRegen, 0, 12);
+
         ApplyEffects();
         HandleCooldowns();
 
@@ -499,6 +498,10 @@ public abstract class MovingObject : MonoBehaviour
 
     public void Death()
     {
+        if (loadedAbility != -1)
+        {
+            abilities[loadedAbility].HideRange();
+        }
         Destroy(this.gameObject);
     }
 

@@ -19,9 +19,9 @@ public class Shock : StatusEffect
         //Make sure there is only one stack of shock on a unit at a time.
         if (target.shock)
         {
-            StatusEffect shock = target.statuses.Find(x => x.name == "shock");
-            target.statuses.Remove(shock);
-            Destroy(shock);
+            StatusEffect se = target.statuses.Find(x => x.statusName == "shock");
+            target.statuses.Remove(se);
+            Destroy(se);
         }
         else
         {
@@ -31,6 +31,8 @@ public class Shock : StatusEffect
             }
             target.shock = true;
         }
+
+        target.statuses.Add(this);
     }
 
     public override void Effect()

@@ -22,4 +22,9 @@ public class EnergyBar : MonoBehaviour
         slider.value = energy;
         energyNumber.text = energy.ToString();
     }
+
+    public void IndicateEnergyUsage(int amountUsed)
+    {
+
+    }
 }

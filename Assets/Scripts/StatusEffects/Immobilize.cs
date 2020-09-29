@@ -17,14 +17,16 @@ public class Immobilize : StatusEffect
         //Make sure there is only one stack of wet on a unit at a time.
         if (target.immobilize)
         {
-            StatusEffect immobilize = target.statuses.Find(x => x.name == "immobilize");
-            target.statuses.Remove(immobilize);
-            Destroy(immobilize);
+            StatusEffect se = target.statuses.Find(x => x.statusName == "immobilize");
+            target.statuses.Remove(se);
+            Destroy(se);
         }
         else
         {
             target.immobilize = true;
         }
+
+        target.statuses.Add(this);
     }
 
     public override void Effect()

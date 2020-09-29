@@ -22,8 +22,17 @@ MonoBehaviour:
   cost: 5
   initialCooldown: 5
   cooldown: 0
-  range: 2
+  range: 5
   cooldownFill: 1
   onCooldown: 0
+  highlight: {fileID: 4258002896530323566, guid: 526a83ebaa88c09459454e992540d305,
+    type: 3}
+  layermask:
+    serializedVersion: 2
+    m_Bits: 1024
+  highlightColor:
+    serializedVersion: 2
+    rgba: 1845494015
+  affectedTiles: []
   entangleRoot: {fileID: 2534408546956608885, guid: 0b847242a650ff947a0fae5812f5f610,
     type: 3}

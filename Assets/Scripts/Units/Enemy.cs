@@ -26,7 +26,7 @@ public class Enemy : MovingObject
 
     public IEnumerator EnemyMove(int rows, int columns, List<Vector3> currentUnwalkables)
     {
-        if (dead || stun) {
+        if (dead || stun || energy < 1) {
             yield break;
         }
 
@@ -106,7 +106,6 @@ public class Enemy : MovingObject
                     yield break;
                 }
 
-                //yield return new WaitForSeconds(.1f);
 
                 if (Vector3.Distance(transform.position, target.position) <= 1)
                 {
@@ -119,6 +118,7 @@ public class Enemy : MovingObject
                 }
             }
         }
+
         if (state != UnitState.CHARGING)
         {
             state = priorState;

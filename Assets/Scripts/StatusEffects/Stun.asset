@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d690292f4cc41044ace2a7473db214a, type: 3}
   m_Name: Stun
   m_EditorClassIdentifier: 
-  name: stun
+  statusName: stun
   description: stunned, duh!
   icon: {fileID: 0}
+  stacks: 1
   damage: 0
   duration: 1
+  timer: 0

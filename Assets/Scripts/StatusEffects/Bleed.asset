@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c7ecdcdbb851b449c53327cb798945, type: 3}
   m_Name: Bleed
   m_EditorClassIdentifier: 
-  name: bleed
+  statusName: bleed
   description: take damage each turn
   icon: {fileID: 2037803678532277430, guid: 7980cd36a20a6ff469481a69e2acca14, type: 3}
+  stacks: 1
   damage: 2
   duration: 3
+  timer: 0

@@ -16,7 +16,8 @@ MonoBehaviour:
   characterRestriction: 
   abilitySlot: 2
   animationName: Discharge
-  description: Charge up, then attack next turn.
+  description: Charge up, then attack next turn. Consumes all energy on this turn
+    and the next.
   initialDamage: 0
   damage: 0
   cost: 1
@@ -25,11 +26,13 @@ MonoBehaviour:
   range: 1
   cooldownFill: 1
   onCooldown: 0
+  highlight: {fileID: 4258002896530323566, guid: 526a83ebaa88c09459454e992540d305,
+    type: 3}
   layermask:
     serializedVersion: 2
     m_Bits: 1024
   highlightColor:
     serializedVersion: 2
-    rgba: 4286743295
+    rgba: 1006633215
   affectedTiles: []
   dischargeAnimationName: Discharge

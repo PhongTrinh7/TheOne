@@ -36,7 +36,8 @@ public class BattleHandler : Manager<BattleHandler>
         board.SetUpScene();
 
         //Battle UI.
-        UIManager.Instance.BattleUI();
+        //UIManager.Instance.BattleUI();
+        cameraController.BattleCamera();
 
         //Ability buttons.
         UIManager.Instance.b1.onClick.AddListener(Ability1);
@@ -59,7 +60,7 @@ public class BattleHandler : Manager<BattleHandler>
         roundCounter = currentUnits.Count;
         activeUnit = currentUnits.Peek();
         activeUnit.StartTurn();
-        cameraController.CameraLookAt(activeUnit);
+        //cameraController.CameraLookAt(activeUnit);
 
         UIManager.Instance.SetUpTurnOrderPortraits(currentUnits);
     }
@@ -91,9 +92,10 @@ public class BattleHandler : Manager<BattleHandler>
                     StartCoroutine(AdvanceTurn());
                 }
 
-
                 if (activeUnit.state == MovingObject.UnitState.READYUP)
-                {                
+                {
+                    UIManager.Instance.setEndTurn(false);
+
                     //Ability ready.
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -107,6 +109,8 @@ public class BattleHandler : Manager<BattleHandler>
                 }
                 else
                 {
+                    UIManager.Instance.setEndTurn(true);
+
                     if (Input.GetKeyDown("space"))
                     {
                         StartCoroutine(AdvanceTurn());
@@ -243,8 +247,6 @@ public class BattleHandler : Manager<BattleHandler>
         activeUnit.StartTurn();
 
         cameraController.CameraLookAt(activeUnit);
-        //cameraController.newPosition.x = activeUnit.transform.position.x;
-        //cameraController.newPosition.y = activeUnit.transform.position.y;
 
         UIManager.Instance.UpdateTurnOrderPortraits(currentUnits);
 
@@ -265,7 +267,7 @@ public class BattleHandler : Manager<BattleHandler>
 
     IEnumerator EnemyTurn()
     {
-        Enemy activeEnemy = (Enemy)activeUnit;
+        Enemy activeEnemy = (Enemy) activeUnit;
         yield return StartCoroutine(activeEnemy.EnemyMove(board.rows, board.columns, currentUnwalkables));
     }
 

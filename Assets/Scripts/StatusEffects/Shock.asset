@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82034ee9b926afd4fbf0e878069f716f, type: 3}
   m_Name: Shock
   m_EditorClassIdentifier: 
-  name: shock
+  statusName: shock
   description: lower energy regen
   icon: {fileID: 0}
+  stacks: 1
   damage: 0
   duration: 3
+  timer: 0
   stun: {fileID: 11400000, guid: ad2195fd9d6b31e439b1eed60c0265ca, type: 2}

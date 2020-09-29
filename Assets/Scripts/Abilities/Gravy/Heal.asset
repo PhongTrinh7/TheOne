@@ -25,10 +25,12 @@ MonoBehaviour:
   range: 1
   cooldownFill: 1
   onCooldown: 0
+  highlight: {fileID: 4258002896530323566, guid: 526a83ebaa88c09459454e992540d305,
+    type: 3}
   layermask:
     serializedVersion: 2
     m_Bits: 1024
   highlightColor:
     serializedVersion: 2
-    rgba: 4286775170
+    rgba: 1845559040
   affectedTiles: []

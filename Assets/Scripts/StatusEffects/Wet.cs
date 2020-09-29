@@ -19,9 +19,9 @@ public class Wet : StatusEffect
         //Make sure there is only one stack of wet on a unit at a time.
         if (target.wet)
         {
-            StatusEffect wet = target.statuses.Find(x => x.name == "wet");
-            target.statuses.Remove(wet);
-            Destroy(wet);
+            StatusEffect se = target.statuses.Find(x => x.statusName == "wet");
+            target.statuses.Remove(se);
+            Destroy(se);
         }
         else
         {
@@ -31,6 +31,8 @@ public class Wet : StatusEffect
             }
             target.wet = true;
         }
+
+        target.statuses.Add(this);
     }
 
     public override void Effect()

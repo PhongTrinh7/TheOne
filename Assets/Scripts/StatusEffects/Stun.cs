@@ -17,14 +17,16 @@ public class Stun : StatusEffect
         //Make sure there is only one stack of stun on a unit at a time.
         if (target.stun)
         {
-            StatusEffect stun = target.statuses.Find(x => x.name == "stun");
-            target.statuses.Remove(stun);
-            Destroy(stun);
+            StatusEffect se = target.statuses.Find(x => x.statusName == "stun");
+            target.statuses.Remove(se);
+            Destroy(se);
         }
         else
         {
             target.stun = true;
         }
+
+        target.statuses.Add(this);
     }
 
     public override void Effect()

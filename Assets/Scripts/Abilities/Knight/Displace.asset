@@ -16,7 +16,7 @@ MonoBehaviour:
   characterRestriction: Knight
   abilitySlot: 1
   animationName: Attack
-  description: Knock unit back.
+  description: Knock unit back 3 spaces.
   initialDamage: 5
   damage: 5
   cost: 2
@@ -25,11 +25,13 @@ MonoBehaviour:
   range: 1
   cooldownFill: 1
   onCooldown: 0
+  highlight: {fileID: 4258002896530323566, guid: 526a83ebaa88c09459454e992540d305,
+    type: 3}
   layermask:
     serializedVersion: 2
     m_Bits: 1024
   highlightColor:
     serializedVersion: 2
-    rgba: 4286743295
+    rgba: 1006633215
   affectedTiles: []
   displacement: 3

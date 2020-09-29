@@ -24,8 +24,9 @@ public class Dash : Ability
             //Check if anything was hit.
             if (hit.transform != null)
             {
-                affectedTiles.Add(hit.transform.gameObject);
-                hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                affectedTiles.Add(ht);
             }
 
             Vector2 spot = hit.transform.position;

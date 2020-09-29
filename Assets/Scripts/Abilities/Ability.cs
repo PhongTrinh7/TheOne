@@ -18,6 +18,7 @@ public abstract class Ability : ScriptableObject
     public int range;
     public float cooldownFill;
     public bool onCooldown;
+    public GameObject highlight;
     public LayerMask layermask;
     public Color32 highlightColor;
     public List<GameObject> affectedTiles;
@@ -25,7 +26,7 @@ public abstract class Ability : ScriptableObject
     public virtual void OnEnable()
     {
         layermask = 1 << LayerMask.NameToLayer("Floor");
-        highlightColor = new Color32(255, 130, 130, 255);
+        highlightColor = new Color32(255, 0, 0, 60);
         affectedTiles = new List<GameObject>();
     }
 
@@ -49,8 +50,14 @@ public abstract class Ability : ScriptableObject
             //Check if anything was hit.
             if (hit.transform != null)
             {
-                affectedTiles.Add(hit.transform.gameObject);
-                hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                affectedTiles.Add(ht);
+                /*if (hit.transform.gameObject.GetComponent<SpriteRenderer>().color == Color.white)
+                {
+                    affectedTiles.Add(hit.transform.gameObject);
+                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                }*/
             }
         }
     }
@@ -59,9 +66,10 @@ public abstract class Ability : ScriptableObject
     {
         if (affectedTiles.Count != 0)
         {
-            foreach (GameObject tile in affectedTiles)
+            foreach (GameObject highlight in affectedTiles)
             {
-                tile.GetComponent<SpriteRenderer>().color = Color.white;
+                Destroy(highlight);
+                //tile.GetComponent<SpriteRenderer>().color = Color.white;
             }
             affectedTiles.Clear();
         }

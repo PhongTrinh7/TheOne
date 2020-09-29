@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 public abstract class StatusEffect : ScriptableObject
 {
-    public string name;
+    public string statusName;
     public string description;
     public Image icon;
+    public int stacks = 0;
     public int damage;
     public int duration;
-    protected int timer = 0;
+    public int timer = 0;
     protected MovingObject target;
 
     public virtual void Description()

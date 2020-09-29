@@ -25,12 +25,17 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         newPosition.z = transform.position.z;
+    }
 
-        Board board = (Board) FindObjectOfType(typeof(Board));
+    public void BattleCamera()
+    {
+        Board board = (Board)FindObjectOfType(typeof(Board));
+
+        newPosition.x = board.columns / 2;
+        newPosition.y = board.rows / 2;
+
         xCamBound = board.columns + 1;
         yCamBound = board.rows;
-
-        Debug.Log("Hi");
     }
 
     // Update is called once per frame
@@ -53,7 +58,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(2))
         {
-            Debug.Log("click");
             cameraLocked = false;
 
             Plane plane = new Plane(Vector3.forward, Vector3.zero);
@@ -76,7 +80,7 @@ public class CameraController : MonoBehaviour
 
             float entry;
 
-            if(plane.Raycast(ray, out entry))
+            if (plane.Raycast(ray, out entry))
             {
                 dragCurrent = ray.GetPoint(entry);
 
@@ -104,3 +108,4 @@ public class CameraController : MonoBehaviour
         newPosition.y = Mathf.Clamp(target.transform.position.y, 0, yCamBound);
     }
 }
+

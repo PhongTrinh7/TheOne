@@ -32,9 +32,9 @@ public class Rotation : Ability
                     //Check if anything was hit.
                     if (hit.transform != null)
                     {
-                        Debug.Log("highlight");
-                        affectedTiles.Add(hit.transform.gameObject);
-                        hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                        GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                        ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                        affectedTiles.Add(ht);
                     }
                 }
             }

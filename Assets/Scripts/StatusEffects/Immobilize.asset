@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a37f223f92f0bb47a81678aa7db4668, type: 3}
   m_Name: Immobilize
   m_EditorClassIdentifier: 
-  name: immobilize
+  statusName: immobilize
   description: can't move
   icon: {fileID: 0}
+  stacks: 1
   damage: 0
   duration: 3
+  timer: 0

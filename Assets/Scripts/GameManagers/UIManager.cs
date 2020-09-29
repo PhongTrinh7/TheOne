@@ -132,6 +132,11 @@ public class UIManager : Manager<UIManager>
 
     }
 
+    public void setEndTurn(bool b)
+    {
+        endTurn.interactable = b;
+    }
+
     public void SetUpTurnOrderPortraits(Queue<MovingObject> currentUnits)
     {
         turnOrderPortraits = new List<Image>();

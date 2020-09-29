@@ -20,18 +20,17 @@ public class Entangle : Ability
         {
             List<Vector3> wave = new List<Vector3>();
 
-            Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
-            Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
+            Vector2 spot0 = start + dir * i;
+            //Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
+            //Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
 
-            caster.CastMaskDetectMulti(spot1, spot2, layermask, out hitLayerMask);
+            caster.CastMaskDetectMulti(spot0, spot0, layermask, out hitLayerMask);
 
             foreach (RaycastHit2D hit in hitLayerMask)
             {
-                if (hit.transform != null)
-                {
-                    affectedTiles.Add(hit.transform.gameObject);
-                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
-                }
+                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                affectedTiles.Add(ht);
             }
         }
     }
@@ -51,10 +50,11 @@ public class Entangle : Ability
         {
             List<Vector3> wave = new List<Vector3>();
 
-            Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
-            Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
+            Vector2 spot0 = start + dir * i;
+            //Vector2 spot1 = start + dir * i + Vector2.Perpendicular(dir);
+            //Vector2 spot2 = start + dir * i - Vector2.Perpendicular(dir);
 
-            caster.CastMaskDetectMulti(spot1, spot2, layermask, out hitLayerMask);
+            caster.CastMaskDetectMulti(spot0, spot0, layermask, out hitLayerMask);
 
             foreach (RaycastHit2D hit in hitLayerMask)
             {
