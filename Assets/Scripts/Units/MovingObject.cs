@@ -57,7 +57,7 @@ public abstract class MovingObject : MonoBehaviour
     //Status effects.
     public Image statusEffectContainer;
     public List<StatusEffect> statuses;
-    public bool bleed;
+    /*public bool bleed;
     public Image bleedIcon;
     public bool wet;
     public Image wetIcon;
@@ -66,8 +66,11 @@ public abstract class MovingObject : MonoBehaviour
     public bool immobilize;
     public Image immobilizeIcon;
     public bool stun;
-    public Image stunIcon;
+    public Image stunIcon;*/
     public bool skipTurn;
+    public bool unknockable;
+    public bool immobile;
+    public bool stun;
 
     //Movement
     public float moveSpeed;
@@ -112,11 +115,11 @@ public abstract class MovingObject : MonoBehaviour
 
         //Get reference to the status effect container and status effects.
         statusEffectContainer = transform.GetChild(0).transform.GetChild(3).gameObject.GetComponent<Image>();
-        bleedIcon = statusEffectContainer.transform.GetChild(0).gameObject.GetComponent<Image>();
+        /*bleedIcon = statusEffectContainer.transform.GetChild(0).gameObject.GetComponent<Image>();
         wetIcon = statusEffectContainer.transform.GetChild(1).gameObject.GetComponent<Image>();
         shockIcon = statusEffectContainer.transform.GetChild(2).gameObject.GetComponent<Image>();
         immobilizeIcon = statusEffectContainer.transform.GetChild(3).gameObject.GetComponent<Image>();
-        stunIcon = statusEffectContainer.transform.GetChild(4).gameObject.GetComponent<Image>();
+        stunIcon = statusEffectContainer.transform.GetChild(4).gameObject.GetComponent<Image>();*/
 
         //Refresh ability cooldowns each battle.
         foreach (Ability a in abilitiesReference)
@@ -129,7 +132,7 @@ public abstract class MovingObject : MonoBehaviour
     //Move takes parameters for x direction, y direction and a RaycastHit2D to check collision.
     public IEnumerator Move(int xDir, int yDir)
     {
-        if (stun || immobilize)
+        if (stun || immobile)
         {
             Debug.Log("Can't move");
             yield break;
@@ -196,6 +199,7 @@ public abstract class MovingObject : MonoBehaviour
         {
             return;
         }
+
         //Sets facing direction.
         facingDirection = direction;
         anim.SetFloat("Horizontal", direction.x);
@@ -499,6 +503,17 @@ public abstract class MovingObject : MonoBehaviour
         skipTurn = false;
     }
 
+    public void Interrupted()
+    {
+        state = UnitState.IDLE;
+        if (charging)
+        {
+            charging = false;
+            anim.SetBool("Charging", false);
+            abilities[loadedAbility].HideRange();
+        }
+    }
+
     public void Death()
     {
         if (loadedAbility != -1)
@@ -511,28 +526,5 @@ public abstract class MovingObject : MonoBehaviour
     public void Update()
     {
         energyBar.SetCurrentEnergy(energy);
-
-        if (dead)
-        {
-            bleed = false;
-            wet = false;
-            shock = false;
-            immobilize = false;
-            stun = false;
-        }
-
-        bleedIcon.gameObject.SetActive(bleed);
-        wetIcon.gameObject.SetActive(wet);
-        shockIcon.gameObject.SetActive(shock);
-        immobilizeIcon.gameObject.SetActive(immobilize);
-        stunIcon.gameObject.SetActive(stun);
-
-        if (stun)
-        {
-            state = UnitState.IDLE;
-            charging = false;
-            anim.SetBool("Charging", false);
-            abilities[loadedAbility].HideRange();
-        }
     }
 }

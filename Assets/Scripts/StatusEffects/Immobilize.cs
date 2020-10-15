@@ -5,39 +5,37 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Immobilize")]
 public class Immobilize : StatusEffect
 {
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
-
     public override void OnApply(MovingObject target)
     {
         this.target = target;
 
-        //Make sure there is only one stack of wet on a unit at a time.
-        if (target.immobilize)
+        StatusEffect se = target.statuses.Find(x => x.statusName == statusName);
+
+        //Make sure there is only one stack of stun on a unit at a time.
+        if (se != null)
         {
-            StatusEffect se = target.statuses.Find(x => x.statusName == "immobilize");
-            target.statuses.Remove(se);
-            Destroy(se);
+            se.timer += duration;
+            Destroy(this.gameObject);
         }
         else
         {
-            target.immobilize = true;
+            target.immobile = true;
+            timer = duration;
+            stacks = 1;
+            target.statuses.Add(this);
+            transform.parent = target.statusEffectContainer.transform;
         }
-
-        target.statuses.Add(this);
     }
-
     public override void Effect()
     {
-        timer++;
+        target.immobile = true;
+        timer--;
     }
 
     public override void ClearStatus()
     {
-        target.immobilize = false;
+        target.immobile = false;
         target.statuses.Remove(this);
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 }

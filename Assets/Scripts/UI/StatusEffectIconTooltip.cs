@@ -20,7 +20,7 @@ public class StatusEffectIconTooltip : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        tooltipText.text = statusEffect.name + "\n" + statusEffect.description + "\nDuration: " + (statusEffect.duration - statusEffect.timer);
+        tooltipText.text = statusEffect.name + "\n" + statusEffect.description + "\nDuration: " + statusEffect.timer;
         float padding = 0f;
         Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + padding, tooltipText.preferredHeight + padding);
         background.sizeDelta = backgroundSize;

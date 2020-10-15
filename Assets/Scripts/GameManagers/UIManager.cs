@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : Manager<UIManager>
 {
     [SerializeField] private Canvas battleUI;
+    public bool showBattleUI;
 
     [SerializeField] private Image abilityPanel;
 
@@ -17,29 +18,27 @@ public class UIManager : Manager<UIManager>
 
     //Player info
     private MovingObject activeUnit;
-    public HealthBar healthBar;
+    public GameObject activeCharacterInfoPanel;
 
     //Buttons
     [SerializeField] public Button b1;
     [SerializeField] public Button b2;
     [SerializeField] public Button b3;
     [SerializeField] public Button b4;
+    [SerializeField] public Button b5;
     public Button endTurn;
 
     public bool abilitiesOn;
 
-    public Text health;
-
-    public EventTrigger trigger;
-
     void Start()
     {
+        showBattleUI = false;
         BattleUI();
     }
 
     public void BattleUI()
     {
-        battleUI.gameObject.SetActive(true);
+
     }
 
     public void AbilityPanel()
@@ -60,7 +59,6 @@ public class UIManager : Manager<UIManager>
             b1.interactable = true;
         }
         b1.GetComponent<Image>().fillAmount = activeUnit.abilities[0].cooldownFill;
-        //b1.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[0]);
 
         if (activeUnit.abilities[1].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[1].cost)
         {
@@ -71,7 +69,6 @@ public class UIManager : Manager<UIManager>
             b2.interactable = true;
         }
         b2.GetComponent<Image>().fillAmount = activeUnit.abilities[1].cooldownFill;
-        //b2.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[1]);
 
         if (activeUnit.abilities[2].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[2].cost)
         {
@@ -82,7 +79,6 @@ public class UIManager : Manager<UIManager>
             b3.interactable = true;
         }
         b3.GetComponent<Image>().fillAmount = activeUnit.abilities[2].cooldownFill;
-        //b3.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[2]);
 
         if (activeUnit.abilities[3].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[3].cost)
         {
@@ -93,7 +89,16 @@ public class UIManager : Manager<UIManager>
             b4.interactable = true;
         }
         b4.GetComponent<Image>().fillAmount = activeUnit.abilities[3].cooldownFill;
-        //b4.transform.GetChild(1).GetComponent<Tooltip>().UpdateText(activeUnit.abilities[3]);
+
+        if (activeUnit.abilities[4].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[4].cost)
+        {
+            b5.interactable = false;
+        }
+        else
+        {
+            b5.interactable = true;
+        }
+        b5.GetComponent<Image>().fillAmount = activeUnit.abilities[4].cooldownFill;
     }
 
     public void Tooltip0()
@@ -115,6 +120,11 @@ public class UIManager : Manager<UIManager>
     {
         b4.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[3]);
     }
+    
+    public void Tooltip4()
+    {
+        b5.transform.GetChild(1).GetComponent<Tooltip>().ShowTooltip(activeUnit.abilities[4]);
+    }
 
     public void HideTooltips()
     {
@@ -122,6 +132,7 @@ public class UIManager : Manager<UIManager>
         b2.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
         b3.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
         b4.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
+        b5.transform.GetChild(1).GetComponent<Tooltip>().HideTooltip();
     }
 
     public void SetSkillsUninteractable()
@@ -130,6 +141,7 @@ public class UIManager : Manager<UIManager>
         b2.interactable = false;
         b3.interactable = false;
         b4.interactable = false;
+        b5.interactable = false;
         abilitiesOn = false;
     }
 
@@ -140,6 +152,7 @@ public class UIManager : Manager<UIManager>
         b2.interactable = true;
         b3.interactable = true;
         b4.interactable = true;
+        b5.interactable = true;
         abilitiesOn = true;
 
     }

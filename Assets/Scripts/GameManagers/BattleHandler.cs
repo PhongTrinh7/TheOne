@@ -44,6 +44,7 @@ public class BattleHandler : Manager<BattleHandler>
         UIManager.Instance.b2.onClick.AddListener(Ability2);
         UIManager.Instance.b3.onClick.AddListener(Ability3);
         UIManager.Instance.b4.onClick.AddListener(Ability4);
+        UIManager.Instance.b5.onClick.AddListener(Ability5);
         UIManager.Instance.endTurn.onClick.AddListener(ClickAdvanceTurn);
 
         //Set up pathfinding.
@@ -81,6 +82,7 @@ public class BattleHandler : Manager<BattleHandler>
             //Ability panel toggle.
             if (Input.GetKeyDown("t"))
             {
+                //UIManager.Instance.BattleUI();
                 UIManager.Instance.AbilityPanel();
             }
 
@@ -180,6 +182,10 @@ public class BattleHandler : Manager<BattleHandler>
                     Ability3();
                 }
                 else if (Input.GetKeyDown("4"))
+                {
+                    Ability4();
+                }
+                else if (Input.GetKeyDown("5"))
                 {
                     Ability4();
                 }
@@ -298,6 +304,11 @@ public class BattleHandler : Manager<BattleHandler>
     public void Ability4()
     {
         activeUnit.ReadyAbility(3);
+    }
+
+    public void Ability5()
+    {
+        activeUnit.ReadyAbility(4);
     }
 
     //Send them to the shadow realms.

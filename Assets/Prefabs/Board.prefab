@@ -60,9 +60,5 @@ MonoBehaviour:
   players:
   - {fileID: 1955431953928455646, guid: 4111ef8bc36d0bd40879b7c06987f17e, type: 3}
   - {fileID: 1899455175842422477, guid: 2baadd4cd5319f64e8355eb112f2fa85, type: 3}
-  enemies:
-  - {fileID: 8792999962680736340, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
-  - {fileID: 3353271238503096174, guid: dbc24b99acb9cf94aa98c94604119dff, type: 3}
-  - {fileID: 8792999962680736340, guid: b2d29b70fbed4bd4ba3b1f131ba71938, type: 3}
-  - {fileID: 3353271238503096174, guid: dbc24b99acb9cf94aa98c94604119dff, type: 3}
+  enemies: []
   units: []

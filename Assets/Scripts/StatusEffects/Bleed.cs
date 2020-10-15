@@ -5,40 +5,31 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Bleed")]
 public class Bleed : StatusEffect
 {
-    public override void Description()
-    {
-        Debug.Log(name + ": " + description);
-    }
-
     public override void OnApply(MovingObject target)
     {
         this.target = target;
 
-        if (target.bleed)
+        StatusEffect se = target.statuses.Find(x => x.statusName == statusName);
+
+        //Make sure there is only one stack of stun on a unit at a time.
+        if (se != null)
         {
-            StatusEffect se = target.statuses.Find(x => x.statusName == "bleed");
-            stacks = se.stacks + 1;
-            target.statuses.Remove(se);
-            Destroy(se);
+            se.stacks++;
+            se.timer += duration;
+            Destroy(this.gameObject);
         }
         else
         {
-            target.bleed = true;
+            timer = duration;
+            stacks = 1;
+            target.statuses.Add(this);
+            transform.parent = target.statusEffectContainer.transform;
         }
-
-        target.statuses.Add(this);
     }
 
     public override void Effect()
     {
         target.TakeDamage(stacks * damage);
-        timer++;
-    }
-
-    public override void ClearStatus()
-    {
-        target.bleed = false;
-        target.statuses.Remove(this);
-        Destroy(this);
+        timer--;
     }
 }

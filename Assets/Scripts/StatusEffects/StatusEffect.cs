@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class StatusEffect : ScriptableObject
+public abstract class StatusEffect : MonoBehaviour
 {
     public string statusName;
     public string description;
@@ -11,7 +11,7 @@ public abstract class StatusEffect : ScriptableObject
     public int stacks = 0;
     public int damage;
     public int duration;
-    public int timer = 0;
+    public int timer;
     protected MovingObject target;
 
     public virtual void Description()
@@ -19,13 +19,32 @@ public abstract class StatusEffect : ScriptableObject
         Debug.Log(name + ": " + description);
     }
 
-    public abstract void OnApply(MovingObject target);
+    public virtual void OnApply(MovingObject target)
+    {
+        this.target = target;
+
+        StatusEffect se = target.statuses.Find(x => x.statusName == statusName);
+
+        //Make sure there is only one stack of stun on a unit at a time.
+        if (se != null)
+        {
+            se.timer += duration;
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            timer = duration;
+            stacks = 1;
+            target.statuses.Add(this);
+            transform.parent = target.statusEffectContainer.transform;
+        }
+    }
 
     public abstract void Effect();
 
     public virtual bool CheckTimer()
     {
-        if (timer == duration)
+        if (timer == 0)
         {
             ClearStatus();
             return true;
@@ -33,5 +52,9 @@ public abstract class StatusEffect : ScriptableObject
         return false;
     }
 
-    public abstract void ClearStatus();
+    public virtual void ClearStatus()
+    {
+        target.statuses.Remove(this);
+        Destroy(this.gameObject);
+    }
 }
