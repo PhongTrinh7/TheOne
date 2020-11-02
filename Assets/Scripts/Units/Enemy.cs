@@ -11,6 +11,7 @@ public class Enemy : MovingObject
     private List<PathNode> path;
     private GameObject[] targets;
     private Transform target;
+    private float moveDelay = .5f;
 
     //private Animator animator;							//Variable of type Animator to store a reference to the enemy's Animator component.
     //private bool skipMove;								//Boolean to determine whether or not enemy should skip a turn or move this turn.
@@ -84,12 +85,7 @@ public class Enemy : MovingObject
 
         if (path.Count == 0)
         {
-            ChangeFacingDirection(target.position - transform.position);
-            if (ReadyAbility(0))
-            {
-                yield return new WaitForSeconds(.5f);
-                CastAbility();
-            }
+            yield return StartCoroutine(EnemyAbility());
             yield return null;
         }
         else
@@ -109,12 +105,7 @@ public class Enemy : MovingObject
 
                 if (Vector3.Distance(transform.position, target.position) <= 1)
                 {
-                    ChangeFacingDirection(target.position - transform.position);
-                    if (ReadyAbility(0))
-                    {
-                        yield return new WaitForSeconds(.5f);
-                        CastAbility();
-                    }
+                    yield return StartCoroutine(EnemyAbility());
                 }
             }
         }
@@ -123,6 +114,18 @@ public class Enemy : MovingObject
         {
             state = priorState;
             target = null;
+        }
+    }
+
+    protected IEnumerator EnemyAbility()
+    {
+        ChangeFacingDirection(target.position - transform.position);
+        if (ReadyAbility(0))
+        {
+            yield return new WaitForSeconds(moveDelay);
+            CastAbility();
+            Debug.Log(anim.GetCurrentAnimatorStateInfo(0).length);
+            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length + moveDelay);
         }
     }
 }

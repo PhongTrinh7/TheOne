@@ -84,7 +84,7 @@ public abstract class MovingObject : MonoBehaviour
     private Rigidbody2D rb2D;
 
     //Animations
-    private Animator anim;
+    protected Animator anim;
 
     // Start is called before the first frame update
     protected virtual void Awake()
@@ -501,6 +501,7 @@ public abstract class MovingObject : MonoBehaviour
         isTurn = false;
         turnIndicator.SetActive(isTurn);
         skipTurn = false;
+        immobile = false;
     }
 
     public void Interrupted()

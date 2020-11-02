@@ -46,19 +46,23 @@ MonoBehaviour:
   rows: 9
   columns: 12
   outerWallTiles:
-  - {fileID: 3655163117366364902, guid: a9870a5aa4511784da80233dd57d8722, type: 3}
-  - {fileID: 5841278203309984515, guid: ad08291851884944281e51ca199af09e, type: 3}
+  - {fileID: 5114543581688508723, guid: c9c7948839690614782d2ce901f040b1, type: 3}
   floorTiles:
-  - {fileID: 3597451680168760057, guid: a38274317a72b2749b1edb4b790058b6, type: 3}
-  - {fileID: 3376735738354201327, guid: b1e649846dc2b8a43960fc14766dab5a, type: 3}
-  - {fileID: 7870294146877137257, guid: 9aa7603ca741e324a83f88ddf4fffd46, type: 3}
-  - {fileID: 186606044949628337, guid: d3cb2b09a4bb024418f1c8f761d537e0, type: 3}
+  - {fileID: 2428537867664235579, guid: 36b2c31f2735c104a9152d25df4ecb17, type: 3}
+  - {fileID: 4044154903587599869, guid: 87ad8178672d529478bddff91b4eeb8f, type: 3}
+  - {fileID: 1613873385646404755, guid: ade64066fb2848148843248ffd2101d2, type: 3}
+  - {fileID: 1745801240741901295, guid: 53c38a66af41026408c04fd08f24b033, type: 3}
   wallTiles:
-  - {fileID: 2117281917934142948, guid: 36df8cd1844bace4eb7b93e2d9c8a866, type: 3}
-  - {fileID: 624173366221980061, guid: 04e05044eee79bc4eadbc7432fa7bc2a, type: 3}
+  - {fileID: 5114543581688508723, guid: c9c7948839690614782d2ce901f040b1, type: 3}
+  - {fileID: 1807522543064876484, guid: 0293269650c97244f98acab847143c55, type: 3}
+  - {fileID: 7178276071310056580, guid: c8daf0d40f90d7a44ba7a150db9bc172, type: 3}
+  - {fileID: 6017281346346409882, guid: 8012b5e32186de8418d837ffb0eb391a, type: 3}
   unwalkables: []
   players:
   - {fileID: 1955431953928455646, guid: 4111ef8bc36d0bd40879b7c06987f17e, type: 3}
   - {fileID: 1899455175842422477, guid: 2baadd4cd5319f64e8355eb112f2fa85, type: 3}
-  enemies: []
+  enemies:
+  - {fileID: 4485666137628757372, guid: f8a0680f78420dd42848dcc1197f0347, type: 3}
+  - {fileID: 5958085012478528208, guid: 535913bf7b16c4344bcc79dae464653e, type: 3}
+  - {fileID: 6413311304607447396, guid: deca754dfcbf9e242ace609077cd8273, type: 3}
   units: []

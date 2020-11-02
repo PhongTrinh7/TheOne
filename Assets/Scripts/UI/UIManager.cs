@@ -10,6 +10,7 @@ public class UIManager : Manager<UIManager>
     public bool showBattleUI;
 
     [SerializeField] private Image abilityPanel;
+    public GameObject instructions;
 
     public Image turnOrderPanel;
     public List<Image> turnOrderPortraits;
@@ -44,6 +45,11 @@ public class UIManager : Manager<UIManager>
     public void AbilityPanel()
     {
         abilityPanel.gameObject.SetActive(!abilityPanel.gameObject.activeInHierarchy);
+    }
+
+    public void InstructionsToggle()
+    {
+        instructions.SetActive(!instructions.activeInHierarchy);
     }
 
     public void UpdateActiveUnitAbilities(MovingObject activeUnit)

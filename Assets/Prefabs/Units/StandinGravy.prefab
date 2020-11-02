@@ -1268,7 +1268,7 @@ MonoBehaviour:
   turnIndicator: {fileID: 255528689701729936}
   damageNumber: {fileID: 8887227401818310891, guid: 9be4e5f3de9a75340b79f1c295a38bf9,
     type: 3}
-  maxHealth: 40
+  maxHealth: 30
   health: 0
   speed: 4
   energy: 0

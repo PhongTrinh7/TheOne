@@ -14,6 +14,9 @@ TextureImporter:
   - first:
       213: 9170681672679788204
     second: GrassSpriteSheet_3
+  - first:
+      213: 8612173583557117646
+    second: GrassSpriteSheet_4
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -115,7 +118,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 109
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -136,7 +139,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 109
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -157,7 +160,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 45
+        y: 64
         width: 64
         height: 64
       alignment: 0
@@ -178,7 +181,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 45
+        y: 64
         width: 64
         height: 64
       alignment: 0
@@ -190,6 +193,27 @@ TextureImporter:
       bones: []
       spriteID: cae8348946ec44f70800000000000000
       internalID: 9170681672679788204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GrassSpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec6cce7be36948770800000000000000
+      internalID: 8612173583557117646
       vertices: []
       indices: 
       edges: []

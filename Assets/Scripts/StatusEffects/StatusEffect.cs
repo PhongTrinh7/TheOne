@@ -14,9 +14,9 @@ public abstract class StatusEffect : MonoBehaviour
     public int timer;
     protected MovingObject target;
 
-    public virtual void Description()
+    public virtual string Description()
     {
-        Debug.Log(name + ": " + description);
+        return statusName + "\n" + description + "\nDuration: " + timer;
     }
 
     public virtual void OnApply(MovingObject target)

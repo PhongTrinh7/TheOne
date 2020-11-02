@@ -1269,9 +1269,9 @@ MonoBehaviour:
   turnIndicator: {fileID: 1493410522070589104}
   damageNumber: {fileID: 8887227401818310891, guid: 9be4e5f3de9a75340b79f1c295a38bf9,
     type: 3}
-  maxHealth: 60
+  maxHealth: 35
   health: 0
-  speed: 3
+  speed: 4
   energy: 0
   healthBar: {fileID: 0}
   energyBar: {fileID: 0}
@@ -1281,7 +1281,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eaf1a96efeb5d6249ad5a5be66cdde2f, type: 2}
   - {fileID: 11400000, guid: 11a9350457e840f4cb47f3aecccb712b, type: 2}
   - {fileID: 11400000, guid: e6d0ea461220c6c4d96a78a96cb9feb2, type: 2}
-  - {fileID: 11400000, guid: 67b53eef68e99994697a87b499174840, type: 2}
+  - {fileID: 11400000, guid: f2b822998fbaa6646823bcc16c822bb1, type: 2}
   abilities: []
   charging: 0
   loadedAbility: 0

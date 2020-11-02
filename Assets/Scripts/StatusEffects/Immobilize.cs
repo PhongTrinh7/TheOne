@@ -5,6 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Immobilize")]
 public class Immobilize : StatusEffect
 {
+
+    public override string Description()
+    {
+        return statusName + "\n" + description + "\nDuration: " + (timer - 1);
+    }
+
     public override void OnApply(MovingObject target)
     {
         this.target = target;

@@ -61,7 +61,8 @@ public class BattleHandler : Manager<BattleHandler>
         roundCounter = currentUnits.Count;
         activeUnit = currentUnits.Peek();
         activeUnit.StartTurn();
-        cameraController.CameraLookAt(activeUnit);
+        
+        //cameraController.CameraLookAt(activeUnit);
 
         UIManager.Instance.SetUpTurnOrderPortraits(currentUnits);
     }
@@ -84,6 +85,11 @@ public class BattleHandler : Manager<BattleHandler>
             {
                 //UIManager.Instance.BattleUI();
                 UIManager.Instance.AbilityPanel();
+            }
+
+            if (Input.GetKeyDown("h"))
+            {
+                UIManager.Instance.InstructionsToggle();
             }
 
             if (activeUnit.State != MovingObject.UnitState.BUSY && !controlLocked)
@@ -195,6 +201,8 @@ public class BattleHandler : Manager<BattleHandler>
         }
         else
         {
+            UIManager.Instance.setEndTurn(false);
+
             if (UIManager.Instance.abilitiesOn)
             {
                 UIManager.Instance.SetSkillsUninteractable();

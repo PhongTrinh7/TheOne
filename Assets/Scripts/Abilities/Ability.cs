@@ -28,6 +28,7 @@ public abstract class Ability : ScriptableObject
         layermask = 1 << LayerMask.NameToLayer("Floor");
         highlightColor = new Color32(255, 0, 0, 60);
         affectedTiles = new List<GameObject>();
+        cooldownFill = 1;
     }
 
     public virtual string Description()
