@@ -5,7 +5,9 @@ using UnityEngine;
 public abstract class Ability : ScriptableObject
 {
     protected MovingObject caster;
+    protected List<MovingObject> targets = new List<MovingObject>();
     public string abilityName;
+    public Sprite sprite;
     public string characterRestriction;
     public int abilitySlot;
     public string animationName;
@@ -26,7 +28,7 @@ public abstract class Ability : ScriptableObject
     public virtual void OnEnable()
     {
         layermask = 1 << LayerMask.NameToLayer("Floor");
-        highlightColor = new Color32(255, 0, 0, 60);
+        highlightColor = new Color32(255, 0, 0, 120);
         affectedTiles = new List<GameObject>();
         cooldownFill = 1;
     }
@@ -48,23 +50,38 @@ public abstract class Ability : ScriptableObject
 
         foreach (RaycastHit2D hit in hits)
         {
-            //Check if anything was hit.
-            if (hit.transform != null)
+            RaycastHit2D h;
+
+            caster.CastHitDetectBlockingSingle(hit.transform.position, hit.transform.position, out h);
+
+            if (h.transform != null && (h.transform.CompareTag("Player") || h.transform.CompareTag("Enemy")))
             {
-                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                targets.Add(h.transform.gameObject.GetComponent<MovingObject>());
+                h.transform.gameObject.GetComponent<MovingObject>().highlight(true);
+            }
+
+            //Check if anything was hit.
+            if (hit.transform != null && (h.transform == null || !h.transform.CompareTag("Wall")))
+            {
+                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity, caster.transform);
                 ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
                 affectedTiles.Add(ht);
-                /*if (hit.transform.gameObject.GetComponent<SpriteRenderer>().color == Color.white)
-                {
-                    affectedTiles.Add(hit.transform.gameObject);
-                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
-                }*/
+            }
+            else
+            {
+                break;
             }
         }
     }
 
     public virtual void HideRange()
     {
+        foreach (MovingObject target in targets)
+        {
+            target.highlight(false);
+        }
+        targets.Clear();
+
         if (affectedTiles.Count != 0)
         {
             foreach (GameObject highlight in affectedTiles)

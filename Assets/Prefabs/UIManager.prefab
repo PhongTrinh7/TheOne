@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765123031635962482}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 358.04993, y: 186.32655, z: -30.307652}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,13 +44,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleUI: {fileID: 0}
+  showBattleUI: 0
   abilityPanel: {fileID: 0}
+  instructions: {fileID: 0}
   turnOrderPanel: {fileID: 0}
   turnOrderPortraits: []
-  healthBar: {fileID: 0}
+  activeCharacterInfoPanel: {fileID: 0}
   b1: {fileID: 0}
   b2: {fileID: 0}
   b3: {fileID: 0}
   b4: {fileID: 0}
+  b5: {fileID: 0}
+  endTurn: {fileID: 0}
   abilitiesOn: 0
-  health: {fileID: 0}

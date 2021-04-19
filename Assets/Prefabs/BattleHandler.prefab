@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8493284019256006709}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 127.91695, y: 100.40334, z: -22.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,9 +43,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca65d298fd48b054991356a341b3f7db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  node: {fileID: 0}
   boards:
   - {fileID: 1078782151265489914, guid: 08d0c04beefeb4748b71313661df892f, type: 3}
+  - {fileID: 9077653452607454764, guid: a2d20f07e3c693b49aca5a7cd78461d0, type: 3}
   board: {fileID: 0}
   currentTurn: 0
+  turnDelay: 0.7
   activeUnit: {fileID: 0}
+  currentUnits: []
   target: {fileID: 0}
+  currentUnwalkables: []
+  cameraController: {fileID: 8895763685254085604, guid: 73eeed997800327418eb5a8571f44580,
+    type: 3}
+  controlLocked: 0
+  battleEnd: 0

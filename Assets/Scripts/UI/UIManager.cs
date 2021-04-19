@@ -33,13 +33,24 @@ public class UIManager : Manager<UIManager>
 
     void Start()
     {
-        showBattleUI = false;
-        BattleUI();
+
     }
 
-    public void BattleUI()
+    public void BattleUI(bool b)
     {
+        battleUI.gameObject.SetActive(b);
+    }
 
+    public void ResetBattleUI()
+    {
+        HideTooltips();
+
+        turnOrderPortraits.Clear();
+
+        foreach (Transform child in turnOrderPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     public void AbilityPanel()
@@ -64,6 +75,7 @@ public class UIManager : Manager<UIManager>
         {
             b1.interactable = true;
         }
+        b1.GetComponent<Image>().sprite = activeUnit.abilities[0].sprite;
         b1.GetComponent<Image>().fillAmount = activeUnit.abilities[0].cooldownFill;
 
         if (activeUnit.abilities[1].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[1].cost)
@@ -74,6 +86,7 @@ public class UIManager : Manager<UIManager>
         {
             b2.interactable = true;
         }
+        b2.GetComponent<Image>().sprite = activeUnit.abilities[1].sprite;
         b2.GetComponent<Image>().fillAmount = activeUnit.abilities[1].cooldownFill;
 
         if (activeUnit.abilities[2].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[2].cost)
@@ -84,6 +97,7 @@ public class UIManager : Manager<UIManager>
         {
             b3.interactable = true;
         }
+        b3.GetComponent<Image>().sprite = activeUnit.abilities[2].sprite;
         b3.GetComponent<Image>().fillAmount = activeUnit.abilities[2].cooldownFill;
 
         if (activeUnit.abilities[3].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[3].cost)
@@ -94,6 +108,7 @@ public class UIManager : Manager<UIManager>
         {
             b4.interactable = true;
         }
+        b4.GetComponent<Image>().sprite = activeUnit.abilities[3].sprite;
         b4.GetComponent<Image>().fillAmount = activeUnit.abilities[3].cooldownFill;
 
         if (activeUnit.abilities[4].cooldownFill != 1 || activeUnit.energy < activeUnit.abilities[4].cost)
@@ -104,6 +119,7 @@ public class UIManager : Manager<UIManager>
         {
             b5.interactable = true;
         }
+        b5.GetComponent<Image>().sprite = activeUnit.abilities[4].sprite;
         b5.GetComponent<Image>().fillAmount = activeUnit.abilities[4].cooldownFill;
     }
 
@@ -168,7 +184,7 @@ public class UIManager : Manager<UIManager>
         endTurn.interactable = b;
     }
 
-    public void SetUpTurnOrderPortraits(Queue<MovingObject> currentUnits)
+    public void SetUpTurnOrderPortraits(List<MovingObject> currentUnits)
     {
         turnOrderPortraits = new List<Image>();
 
@@ -181,7 +197,7 @@ public class UIManager : Manager<UIManager>
         turnOrderPortraits[0].rectTransform.localScale = new Vector2(1.5f, 1.5f);
     }
 
-    public void UpdateTurnOrderPortraits(Queue<MovingObject> currentUnits)
+    public void UpdateTurnOrderPortraits(List<MovingObject> currentUnits)
     {
         turnOrderPortraits.Clear();
 

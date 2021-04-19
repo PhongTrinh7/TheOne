@@ -38,6 +38,7 @@ public abstract class MovingObject : MonoBehaviour
     public Image portrait;
     public GameObject turnIndicator;
     public DamageNumber damageNumber;
+    public Color color;
 
     //Unit stats.
     public int maxHealth;
@@ -74,6 +75,8 @@ public abstract class MovingObject : MonoBehaviour
 
     //Movement
     public float moveSpeed;
+    public float launchSpeed = 5;
+    public float dashSpeed = 3;
     protected float inverseMoveTime;
     public LayerMask blockingLayer;
     public Vector2 facingDirection;
@@ -86,10 +89,16 @@ public abstract class MovingObject : MonoBehaviour
     //Animations
     protected Animator anim;
 
+    //Canvas
+    protected Canvas canvas;
+
+    public float hitStopMult;
+
     // Start is called before the first frame update
     protected virtual void Awake()
     {
         moveSpeed = 3f;
+        hitStopMult = 50f;
 
         health = maxHealth;
 
@@ -115,11 +124,9 @@ public abstract class MovingObject : MonoBehaviour
 
         //Get reference to the status effect container and status effects.
         statusEffectContainer = transform.GetChild(0).transform.GetChild(3).gameObject.GetComponent<Image>();
-        /*bleedIcon = statusEffectContainer.transform.GetChild(0).gameObject.GetComponent<Image>();
-        wetIcon = statusEffectContainer.transform.GetChild(1).gameObject.GetComponent<Image>();
-        shockIcon = statusEffectContainer.transform.GetChild(2).gameObject.GetComponent<Image>();
-        immobilizeIcon = statusEffectContainer.transform.GetChild(3).gameObject.GetComponent<Image>();
-        stunIcon = statusEffectContainer.transform.GetChild(4).gameObject.GetComponent<Image>();*/
+
+        //Get reference to canvas.
+        canvas = transform.GetChild(0).GetComponent<Canvas>();
 
         //Refresh ability cooldowns each battle.
         foreach (Ability a in abilitiesReference)
@@ -272,6 +279,7 @@ public abstract class MovingObject : MonoBehaviour
     public IEnumerator LaunchCoroutine(Vector2 direction, int displacement)
     {
         priorState = state;
+        Vector2 facing = facingDirection;
         if (state == UnitState.CHARGING)
         {
             Debug.Log("Hide");
@@ -280,6 +288,8 @@ public abstract class MovingObject : MonoBehaviour
         else
         {
             state = UnitState.BUSY;
+            ChangeFacingDirection(-direction);
+            anim.SetBool("Launched", true);
         }
 
         //Store start position to move from, based on objects current transform position.
@@ -296,14 +306,14 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end, 2f));
+            yield return StartCoroutine(SmoothMovement(end, launchSpeed));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = direction;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 2f));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, launchSpeed));
             TakeDamage(3);
         }
 
@@ -314,6 +324,8 @@ public abstract class MovingObject : MonoBehaviour
         }
         else
         {
+            anim.SetBool("Launched", false);
+            ChangeFacingDirection(facing);
             ReturnToPriorState();
         }
     }
@@ -342,14 +354,14 @@ public abstract class MovingObject : MonoBehaviour
         if (hit.transform == null)
         {
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            yield return StartCoroutine(SmoothMovement(end, 3f));
+            yield return StartCoroutine(SmoothMovement(end, dashSpeed));
         }
 
         else
         {
             //If something is hit, collide with obstacle.
             Vector3 offset = facingDirection;
-            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, 3f));
+            yield return StartCoroutine(SmoothMovement(hit.transform.position - offset, dashSpeed));
             if (hit.transform.gameObject.CompareTag("Enemy") || hit.transform.gameObject.CompareTag("Player"))
             {
                 abilities[loadedAbility].Effect();
@@ -389,21 +401,52 @@ public abstract class MovingObject : MonoBehaviour
         {
             foreach (Vector3 position in wave)
             {
-                Instantiate(hazard, position, Quaternion.identity);
+                Instantiate(hazard, position, Quaternion.identity, ((Board) FindObjectOfType(typeof(Board))).transform);
             }
             yield return new WaitForSeconds(waveDelay);
+        }
+    }
+
+    public void highlight(bool value, Color highlightColor)
+    {
+        if(value)
+        {
+            color = GetComponent<SpriteRenderer>().color;
+            GetComponent<SpriteRenderer>().color = highlightColor;
+
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().color = color;
+        }
+    }
+
+    public void highlight(bool value)
+    {
+        if (value)
+        {
+            color = GetComponent<SpriteRenderer>().color;
+            GetComponent<SpriteRenderer>().color = Color.red;
+
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().color = color;
         }
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
+
         if (damage < 0)
         {
             Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, true);
         }
         else
         {
+            anim.SetTrigger("Hurt");
+            GameManager.Instance.timeManip(damage / hitStopMult);
             Instantiate(damageNumber, transform.position, Quaternion.identity).SetDamageVisual(damage, false);
         }
 
@@ -413,6 +456,7 @@ public abstract class MovingObject : MonoBehaviour
         if (!dead && health <= 0)
         {
             dead = true;
+            Death();
             return;
         }
         else if (dead && health > 0)
@@ -475,6 +519,9 @@ public abstract class MovingObject : MonoBehaviour
         turnIndicator.SetActive(isTurn);
         energy = Mathf.Clamp(energy + energyRegen, 0, 12);
 
+        canvas.GetComponent<RectTransform>().sizeDelta = new Vector2(8, 10);
+        canvas.GetComponent<RectTransform>().localScale = new Vector3(.15f, .15f, .1f);
+
         ApplyEffects();
         HandleCooldowns();
 
@@ -494,6 +541,9 @@ public abstract class MovingObject : MonoBehaviour
 
     public void EndTurn()
     {
+        canvas.GetComponent<RectTransform>().sizeDelta = new Vector2(8, 12);
+        canvas.GetComponent<RectTransform>().localScale = new Vector3(.1f, .1f, .1f);
+
         if (!charging)
         {
             state = UnitState.IDLE;
@@ -521,6 +571,7 @@ public abstract class MovingObject : MonoBehaviour
         {
             abilities[loadedAbility].HideRange();
         }
+        BattleManager.Instance.RemoveUnit(this);
         Destroy(this.gameObject);
     }
 

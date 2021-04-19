@@ -28,9 +28,23 @@ public class Entangle : Ability
 
             foreach (RaycastHit2D hit in hitLayerMask)
             {
-                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
-                ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
-                affectedTiles.Add(ht);
+                RaycastHit2D h;
+
+                caster.CastHitDetectBlockingSingle(hit.transform.position, hit.transform.position, out h);
+
+                if (h.transform != null && (h.transform.CompareTag("Player") || h.transform.CompareTag("Enemy")))
+                {
+                    targets.Add(h.transform.gameObject.GetComponent<MovingObject>());
+                    h.transform.gameObject.GetComponent<MovingObject>().highlight(true);
+                }
+
+                //Check if anything was hit.
+                if (hit.transform != null && h.transform == null || !h.transform.CompareTag("Wall"))
+                {
+                    GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity, caster.transform);
+                    ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
+                    affectedTiles.Add(ht);
+                }
             }
         }
     }

@@ -24,6 +24,8 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        newPosition.x = transform.position.x;
+        newPosition.y = transform.position.y;
         newPosition.z = transform.position.z;
     }
 
@@ -34,7 +36,7 @@ public class CameraController : MonoBehaviour
         newPosition.x = board.columns / 2;
         newPosition.y = board.rows / 2;
 
-        xCamBound = board.columns + 1;
+        xCamBound = board.columns;
         yCamBound = board.rows;
     }
 
@@ -42,7 +44,7 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         HandleCameraMovement();
-        if (cameraLocked)
+        if (target != null && cameraLocked)
         {
             CameraLock();
         }

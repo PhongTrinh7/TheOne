@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Entangle
   m_EditorClassIdentifier: 
   abilityName: Entangle
+  sprite: {fileID: -4853200237191263413, guid: 6d3a56532707be843b71e4562c419a55, type: 3}
   characterRestriction: 
   abilitySlot: 2
-  animationName: Attack
+  animationName: Plant
   description: Immobilize your enemies.
   initialDamage: 0
   damage: 0
@@ -32,7 +33,7 @@ MonoBehaviour:
     m_Bits: 1024
   highlightColor:
     serializedVersion: 2
-    rgba: 1845494015
+    rgba: 1006633215
   affectedTiles: []
   entangleRoot: {fileID: 2534408546956608885, guid: 0b847242a650ff947a0fae5812f5f610,
     type: 3}

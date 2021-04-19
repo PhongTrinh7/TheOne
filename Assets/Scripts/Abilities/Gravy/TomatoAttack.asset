@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: TomatoAttack
   m_EditorClassIdentifier: 
   abilityName: Tomato
+  sprite: {fileID: -1003456328512876122, guid: 6d3a56532707be843b71e4562c419a55, type: 3}
   characterRestriction: 
   abilitySlot: 3
-  animationName: Attack
+  animationName: Plant
   description: Lay down tomatoes.
   initialDamage: 0
   damage: 0

@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4313265210280526899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.3400316, y: 3.5981925, z: -3.4483318}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,4 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da08bbe50c400a43be85fe4754cbd66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  players: []
+  overworldHandler: {fileID: 3240356142446167265, guid: 976ae5d75cc889343a7e5f22f755858a,
+    type: 3}
+  battleHandler: {fileID: 8493284019256006708, guid: 000acdc848c945c47bd5903df10ea160,
+    type: 3}

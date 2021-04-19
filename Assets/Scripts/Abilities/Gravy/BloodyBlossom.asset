@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: BloodyBlossom
   m_EditorClassIdentifier: 
   abilityName: Blood Blossom
+  sprite: {fileID: 303620507006913310, guid: 6d3a56532707be843b71e4562c419a55, type: 3}
   characterRestriction: 
   abilitySlot: 1
-  animationName: Attack
+  animationName: Plant
   description: Sets down Bloodroot hazards.
   initialDamage: 0
   damage: 0

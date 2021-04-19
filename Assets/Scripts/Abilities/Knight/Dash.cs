@@ -21,21 +21,26 @@ public class Dash : Ability
 
         foreach (RaycastHit2D hit in hits)
         {
+            RaycastHit2D h;
+
+            caster.CastHitDetectBlockingSingle(hit.transform.position, hit.transform.position, out h);
+
             //Check if anything was hit.
-            if (hit.transform != null)
+            if (hit.transform != null && (h.transform == null || !h.transform.CompareTag("Wall")))
             {
-                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity);
+                GameObject ht = Instantiate(highlight, hit.transform.position, Quaternion.identity, caster.transform);
                 ht.gameObject.GetComponent<SpriteRenderer>().color = highlightColor;
                 affectedTiles.Add(ht);
             }
-
-            Vector2 spot = hit.transform.position;
-
-            RaycastHit2D hitBL;
-            caster.CastHitDetectBlockingSingle(spot, spot, out hitBL);
-
-            if (hitBL.transform != null)
+            else
             {
+                break;
+            }
+
+            if (h.transform != null && (h.transform.CompareTag("Player") || h.transform.CompareTag("Enemy")))
+            {
+                targets.Add(h.transform.gameObject.GetComponent<MovingObject>());
+                h.transform.gameObject.GetComponent<MovingObject>().highlight(true);
                 break;
             }
         }

@@ -16,9 +16,11 @@ public class Shock : StatusEffect
         //Make sure there is only one stack of wet on a unit at a time.
         if (se != null)
         {
-            target.statuses.Remove(se);
-            Destroy(se.gameObject);
+            se.ClearStatus();
+            //target.statuses.Remove(se);
+            //Destroy(se.gameObject);
             target.ApplyStatus(Object.Instantiate(stun));
+            Destroy(gameObject);
         }
         else
         {

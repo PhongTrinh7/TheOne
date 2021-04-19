@@ -22,6 +22,11 @@ public class ChargedAttack : Ability
     }
     public override void Cast()
     {
+        foreach (MovingObject target in targets)
+        {
+            target.highlight(false);
+        }
+
         damage = caster.energy * 2 + 2;
         caster.energy = 0;
         caster.Charge();

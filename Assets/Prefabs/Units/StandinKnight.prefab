@@ -788,7 +788,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4282174150
-  m_fontColor: {r: 0.77647066, g: 0.79215693, b: 0.23529413, a: 1}
+  m_fontColor: {r: 0.7773071, g: 0.7921569, b: 0.2352941, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1269,6 +1269,7 @@ MonoBehaviour:
   turnIndicator: {fileID: 1493410522070589104}
   damageNumber: {fileID: 8887227401818310891, guid: 9be4e5f3de9a75340b79f1c295a38bf9,
     type: 3}
+  color: {r: 0, g: 0, b: 0, a: 0}
   maxHealth: 35
   health: 0
   speed: 4
@@ -1280,7 +1281,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0c73a6d3231c8c14c90c0a8ecefa94a6, type: 2}
   - {fileID: 11400000, guid: eaf1a96efeb5d6249ad5a5be66cdde2f, type: 2}
   - {fileID: 11400000, guid: 11a9350457e840f4cb47f3aecccb712b, type: 2}
-  - {fileID: 11400000, guid: e6d0ea461220c6c4d96a78a96cb9feb2, type: 2}
+  - {fileID: 11400000, guid: d080b3248c877f6488990e64153cd3bc, type: 2}
   - {fileID: 11400000, guid: f2b822998fbaa6646823bcc16c822bb1, type: 2}
   abilities: []
   charging: 0
@@ -1292,11 +1293,14 @@ MonoBehaviour:
   immobile: 0
   stun: 0
   moveSpeed: 0
+  launchSpeed: 5
+  dashSpeed: 3
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
   facingDirection: {x: 0, y: 0}
   moveCost: 1
+  hitStopMult: 0
 --- !u!114 &7513906322675455768
 MonoBehaviour:
   m_ObjectHideFlags: 0

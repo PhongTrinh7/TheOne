@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Displace
   m_EditorClassIdentifier: 
   abilityName: Yeet
+  sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   characterRestriction: Knight
   abilitySlot: 1
   animationName: Attack
   description: Knock unit back 3 spaces.
   initialDamage: 5
-  damage: 5
+  damage: 3
   cost: 2
   initialCooldown: 2
   cooldown: 0
@@ -29,7 +30,7 @@ MonoBehaviour:
     type: 3}
   layermask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 1280
   highlightColor:
     serializedVersion: 2
     rgba: 1006633215
